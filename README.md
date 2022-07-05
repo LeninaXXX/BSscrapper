@@ -30,5 +30,5 @@
 
 #### Comentarios
 
-Para un *diario* dado, cada ```diario_target``` especifico, cada ```diario_requester``` especifico, y cada ```diario_scrapper``` especificos, se pueden crear como subclases de clases ```target```, ```requester```, y ```scrapper``` generales.
+Dado *diario*, cada ```diario_target``` especifico, cada ```diario_requester``` especifico, y cada ```diario_scrapper``` especificos, se pueden crear como subclases de clases ```target```, ```requester```, y ```scrapper``` generales.
 
