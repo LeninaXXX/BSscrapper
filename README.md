@@ -15,19 +15,20 @@
 #### Ejemplos durante el desarrollo:
 
  * Infobae: https://www.infobae.com
-	* ```infobae_target```
-	* ```infobae_requester```
-	* ```infobae_scrapper```
+	* ```infobae_target``` imported as target
+	* ```infobae_requester``` imported as requester
+	* ```infobae_scrapper``` imported as scrapper
  * La Nacion: https://www.lanacion.com.ar
-	* ```lanacion_target```
-	* ```lanacion_requester```
-	* ```lanacion_scrapper```
+	* ```lanacion_target``` imported as target
+	* ```lanacion_requester``` imported as requester
+	* ```lanacion_scrapper``` imported as scrapper
  * Ambito Financiero: https://www.ambito.com/
-	* ```ambitofinanciero_target```
-	* ```ambitofinanciero_requester```
-	* ```ambitofinanciero_scrapper```
+	* ```ambitofinanciero_target``` imported as target
+	* ```ambitofinanciero_requester``` imported as requester
+	* ```ambitofinanciero_scrapper``` imported as scrapper
 
 
 #### Comentarios
 
-	Cada ```target``` especifico 
+	Para un *diario* dado, cada ```diario_target``` especifico, cada ```diario_requester``` especifico, y cada ```diario_scrapper``` especificos, se pueden crear como subclases de clases ```target```, ```requester```, y ```scrapper``` generales.
+
