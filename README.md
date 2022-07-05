@@ -1,5 +1,5 @@
 ## BSscrapper
----
+
 ### Scrapper basado en _Beautiful Soup_
 
 * Targets:
