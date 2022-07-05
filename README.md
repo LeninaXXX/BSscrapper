@@ -1,5 +1,5 @@
 ## BSscrapper
----
+-
 ### Scrapper basado en _Beautiful Soup_
 
 * Targets:
@@ -15,5 +15,19 @@
 #### Ejemplos durante el desarrollo:
 
  * Infobae: https://www.infobae.com
+	* ```infobae_target```
+	* ```infobae_requester```
+	* ```infobae_scrapper```
  * La Nacion: https://www.lanacion.com.ar
+	* ```lanacion_target```
+	* ```lanacion_requester```
+	* ```lanacion_scrapper```
  * Ambito Financiero: https://www.ambito.com/
+	* ```ambitofinanciero_target```
+	* ```ambitofinanciero_requester```
+	* ```ambitofinanciero_scrapper```
+
+
+#### Comentarios
+
+	Cada ```target``` especifico 
