@@ -16,16 +16,16 @@
 
  * Infobae: https://www.infobae.com
 	* ```infobae_target``` imported as target
-	 * ```infobae_requester``` imported as requester
-	 * ```infobae_scrapper``` imported as scrapper
+	  * ```infobae_requester``` imported as requester
+	  * ```infobae_scrapper``` imported as scrapper
  * La Nacion: https://www.lanacion.com.ar
 	* ```lanacion_target``` imported as target
-	 * ```lanacion_requester``` imported as requester
-	 * ```lanacion_scrapper``` imported as scrapper
+	  * ```lanacion_requester``` imported as requester
+	  * ```lanacion_scrapper``` imported as scrapper
  * Ambito Financiero: https://www.ambito.com/
 	* ```ambitofinanciero_target``` imported as target
-	 * ```ambitofinanciero_requester``` imported as requester
-	 * ```ambitofinanciero_scrapper``` imported as scrapper
+	  * ```ambitofinanciero_requester``` imported as requester
+	  * ```ambitofinanciero_scrapper``` imported as scrapper
 
 
 #### Comentarios
