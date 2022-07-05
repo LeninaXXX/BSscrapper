@@ -2,13 +2,13 @@
 
 ### Scrapper basado en _Beautiful Soup_
 
-* Targets:
+* targets:
 	Cada uno tiene por competencia una pagina ("```target```") sobre la que hacer _scrapping_.
 	Existe para poder personalizar cada caso.
-* Requesters:
+* tequesters:
 	Para cada ```target```, existe un ```requester``` que se ocupa de traer del servidor remoto el/los documento(s) sobre los que se quiere hacer _scrapping_.
 	Existe en funcion de las peculiaridades que ese _requesting_ pudiera tener, como bloqueo por numero de solicitudes.
-* Scrappers:
+* scrappers:
 	Para cada ```target```, existe un ```scrapper```, ajustado a las peculiaridades de cada pagina en cuestion (i.e.: extraer datos de La Nacion vs extraerlos de Ambito Financiero o Infobae no va a ser, en general, igual, dado que la diagramacion de la pagina va a ser diferente).
 	Existe en funcion de las peculiaridades de cada *documento* (ya sea *el* documento que un target devuelva, o *los* que interese scrappear) que un ```target``` dado retorne.
 
@@ -16,16 +16,16 @@
 
  * Infobae: https://www.infobae.com
 	* ```infobae_target``` imported as target
-	* ```infobae_requester``` imported as requester
-	* ```infobae_scrapper``` imported as scrapper
+	 * ```infobae_requester``` imported as requester
+	 * ```infobae_scrapper``` imported as scrapper
  * La Nacion: https://www.lanacion.com.ar
 	* ```lanacion_target``` imported as target
-	* ```lanacion_requester``` imported as requester
-	* ```lanacion_scrapper``` imported as scrapper
+	 * ```lanacion_requester``` imported as requester
+	 * ```lanacion_scrapper``` imported as scrapper
  * Ambito Financiero: https://www.ambito.com/
 	* ```ambitofinanciero_target``` imported as target
-	* ```ambitofinanciero_requester``` imported as requester
-	* ```ambitofinanciero_scrapper``` imported as scrapper
+	 * ```ambitofinanciero_requester``` imported as requester
+	 * ```ambitofinanciero_scrapper``` imported as scrapper
 
 
 #### Comentarios
