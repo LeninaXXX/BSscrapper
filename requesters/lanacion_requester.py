@@ -1,9 +1,8 @@
 # lanacion_requester.py -- subclase de requester
 
-import requesters.requester as requester
+from requesters.requester import requester  # make superclass visible
 
 import requests
 
 class lanacion_requester(requester):
-	pass
-	
+    pass

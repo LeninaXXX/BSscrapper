@@ -1,10 +1,46 @@
 # main.py -- main xD
 
-import logging
-import sys
+import logging  # TODO: logging pendiente
+import sys      # Para hacer argparsing a lo bruto
 
-import targets.ambitofinanciero_target as ambitofinanciero_target
-# import targets.infobae_target as infobae_target
-# import targets.lanacion_target as lanacion_target
+from targets.ambitofinanciero_target import ambitofinanciero_target     # TODO: Segunda prioridad
+from targets.infobae_target import infobae_target                       
+from targets.lanacion_target import lanacion_target
 
+# Todo esto es una asquerosidad deforme para salir del paso que tiene que ser
+#    extirpada y reemplazada por un apropiado manejo de parametros en linea de comandos
+
+# args = list(set(sys.argv[1:]))      # deduplicar argumentos
+# for arg in args:
+#     if arg == "AmbitoFinanciero":
+#         ambitofinanciero = ambitofinanciero_target()    # creo job "Ambito Financiero"
+#         ambitofinanciero.launch()                       # ... lanzo job : request + scrap
+#         #
+#         #                                                 ... inspecciono el resultado si 
+#         #                                                 ... asi lo quiero (placeholder)
+#         #
+#         ambitofinanciero.store()                        # ... commiteo a la database
+#     
+#     elif arg == "Infobae":
+#         infobae = infobae_target()                      # ... job "Infobae"
+#         infobae.launch()                                # ... lanzo
+#         #
+#         # ... inspecciono, si asi lo quiero (placeholder)
+#         #
+#         infobae.store()                                 # ... 
+#     
+#     elif arg == "LaNacion":
+#         lanacion = lanacion_target()                    # ... job "La Nacion"
+#         lanacion.launch()                               # ... lanzo job...
+#         #
+#         # ... inspecciono, si asi lo quiero (placeholder)
+#         #
+#         lanacion.store()                                # ... 
+#     else:
+#         print('"' + arg + '"', "no es un target valido")    # ... y coso (?)
+#         # continue
+
+# ambitofinanciero = ambitofinanciero_target()
+# infobae = infobae_target()
+lanacion = lanacion_target()
 

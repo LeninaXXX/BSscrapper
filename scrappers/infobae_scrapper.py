@@ -1,6 +1,8 @@
 # infobae_scrapper.py -- subclase de scrapper
 
-import scrappers.scrapper as scrapper
+from scrappers.scrapper import scrapper
+
+import bs4 as bs
 
 class infobae_scrapper(scrapper):
 	pass
