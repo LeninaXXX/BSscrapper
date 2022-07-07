@@ -11,8 +11,10 @@ class requester():
         self.headers = headers
         self.params = params
         # out // "the spoils"
-        self.pload = None     # gonna be a full 'requests' response
-    
+        # self.pload = None     # full 'requests' response -- 'pload' instead of 'payload' to avoid namespace collision
+        #    turns out that no es conveniente definirlo hasta fetchear
+        #    por lo pronto, llamar a 'payload' o 'payload_text' automaticamente 
+        #    triggerea las llamadas apropiadas para que el return este definido.
     def set_url(self, url):
         self.url = url
     
@@ -23,11 +25,10 @@ class requester():
         self.params = params
     
     def go_fetch(self):
-        self.pload = requests.get(self.url, 
-                                    headers = self.headers, 
-                                    params = self.params)
+        self.pload = requests.get(self.url, headers = self.headers, params = self.params)
         
-    # this makes sense for the sake of generality and _the future_
+    # this makes sense for the generality's sake and _the future_
+    # i.e.: en algun punto puede interesarme manosear el pload ("payload")
     def payload(self):
         try:
             return self.pload
@@ -38,7 +39,7 @@ class requester():
     # ... for the sake of straightforwardness because it's what BeautifulSoup wants
     def payload_text(self):
         try:
-            return self.pload.text
+            return self.pload.text  # return self.payload().text?
         except AttributeError:
             self.go_fetch()
-            return self.pload.text      
+            return self.pload.text  # return self.payload().text?    

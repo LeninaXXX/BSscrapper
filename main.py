@@ -7,9 +7,15 @@ from targets.ambitofinanciero_target import ambitofinanciero_target     # TODO: 
 from targets.infobae_target import infobae_target                       
 from targets.lanacion_target import lanacion_target
 
-# Todo esto es una asquerosidad deforme para salir del paso que tiene que ser
-#    extirpada y reemplazada por un apropiado manejo de parametros en linea de comandos
-
+def ls(x = None):
+    if x:
+        return [elem for elem in dir(x) if elem[:2] != '__']
+    else:
+        return dir()
+    
+# Todo esto es una asquerosidad deforme para salir del paso que tiene a ser extirpada
+#    y reemplazada por un apropiado manejo de parametros en command line
+# 
 # args = list(set(sys.argv[1:]))      # deduplicar argumentos
 # for arg in args:
 #     if arg == "AmbitoFinanciero":
@@ -42,5 +48,9 @@ from targets.lanacion_target import lanacion_target
 
 # ambitofinanciero = ambitofinanciero_target()
 # infobae = infobae_target()
+
 lanacion = lanacion_target()
+# lanacion.launch()               
+# lanacion.store()
+
 
