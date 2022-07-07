@@ -31,7 +31,18 @@
 
 Dado *diario*, cada ```diario_target``` especifico, cada ```diario_requester``` especifico, y cada ```diario_scrapper``` especificos, se pueden crear como subclases de clases ```target```, ```requester```, y ```scrapper``` generales.
 
-#### To_Do:
+### Uso
+
+	Clonar el repositorio,
+	```git clone https://github.com/LeninaXXX/BSscrapper```
+	crear un _virtual environment_,
+	```python -m venv .venv```
+	activar el virtual environment,
+	```.venv\Scripts\Activate.bat```
+	instalar paquetes requeridos; se van a instalar al virtual environment, en `.venv`,
+	```pip install -r requirements.txt```	
+
+### To_Do:
 
  * Hay metodos en la subclase`lanacion_target` que en una primera aproximacion los puse ahi pensando que iban a tener preculiaridades propias de _La Nacion_, pero que en realidad son completamente genericos, y pueden moverse a la superclase (`target`). Para las subclases solo parecen realmente indispensables cosas como _url_. Si bien tal vez esa logica se podria implementar como instancias de una unica clase, por lo pronto me parece sensato dejarlas por si el scrapping evoluciona a algo mas sofisticado que extraer uno o mas articulos de la portada: representa una buena separacion de tareas, y no complica especialmente las cosas.
  
@@ -46,7 +57,7 @@ Dado *diario*, cada ```diario_target``` especifico, cada ```diario_requester``` 
  * _Ambito Financiero_ & _Infobae_ me quedaron pendientes.
     Decidir un criterio de como individualizar lo que se quiere scrappear *puntualmente* (e.g.: El articulo principal) de manera tal que sea *robustamente repetible* parece deceptively hard, y casi diria que fue lo mas time consuming... es eso o estoy pasando algo obvio por alto y/o encarando mal la cosa.
 
-#### Wishlist:
+### Wishlist:
  
  * Un modo mas inmediato, intuitivo, etc... de 'tantear' ese criterio con el cual individualizar el nodo del tree html del que extraer el scrap.
 	Vengo pensando en un script interactivo que permita usar `Beautiful Soup` (u otro scrapper for that matter) de manera interactiva para explorar el texto de un _request_, y que haga mas facil "visualizar" lo que se quiere.
