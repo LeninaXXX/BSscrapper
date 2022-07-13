@@ -14,8 +14,6 @@ class lanacion_job(job):
         self.url = url
         self.headers = headers
         self.params = params
-        # self.requester = requester(url)                         # requester is lanacion_requester 'imported as'...
-        # self.scrapper = scrapper(self.requester.payload_text()) # scrapper is lanacion_scrapper 'imported as'...
 
     # launch'ear el trabajo de requesting + scrapping
     # ... es competecia de este metodo operar requester y al scrapper
@@ -31,14 +29,3 @@ class lanacion_job(job):
         print("Scrapeando...")
         self.scrapper = scrapper(self.requester.payload_text())
         self.scrapper.go_scrape()
-
-    # store'ar en la database lo que sea que se obtuvo
-#   def store(self):
-#       # ya se vera...
-#       # but this is gonna refer to self.scrapper.payload(), where the scrape is 
-#       # represented en un formato confortable a la insercion en una database (un {} ?)
-#       
-#       print("Mostrar scrape...")
-#       print("Storear el request crudo (as it is in self.requester.payload_text()) en MongoDB for future reference?")
-#       print("Agarrar la representacion 'piola' (un dictionary?) self.scrapper.payload() e insertarla en SQL?")
-#       pass

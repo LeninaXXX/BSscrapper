@@ -15,8 +15,9 @@ class job():
     #   no parece ameritar bajo ningun punto de vista el ser diferente para cada subclase: el ser
     #   unico implica una garantia de uniformidad
     def store(self):
-        
-        # MongoDB
+        # #########################################################################################        
+        # MongoDB Section
+        # #########################################################################################        
         #  Esto se va a referir al scrape crudo tal cual lo obtuvo requester,
         #  self.requester.text
         self.mongo = MongoDB()
@@ -45,11 +46,11 @@ class job():
         #   - y sus categorias
         # Ubicacion y tamaño de foto principal asociada al titulo principal
         #
-
         self.mongo.upsertDict(mongo_pload, 'TESTE', self.name)
 
-        # SQL
-
+        # #########################################################################################
+        # SQL Section
+        # #########################################################################################
         self.sql = SQLServer()
 
         # id = []; id.append(self.name + str(self.datetime))

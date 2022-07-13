@@ -67,7 +67,21 @@ Dado *diario*, cada ```diario_job``` especifico, cada ```diario_requester``` esp
  * Idealmente el programa deberia levantar toda la configuracion de archivos externos: Tarea que no parece, ni por asomo, trivial.
  * Dormir (?)
 
- ### Sitios "De Ellos"
-
+---
+### Sitios "Suyos"
+ * Ambito Financiero: https://www.ambito.com/
+ * Infobae: https://www.infobae.com
+ * La Nacion: https://www.lanacion.com.ar
+ 
+### Sitios "Nuestros"
  * La 100 Radio ( https://radiomitre.cienradios.com )
 
+---
+### Log
+
+---
+### DataModels
+
+#### MongoDB
+
+#### SQL

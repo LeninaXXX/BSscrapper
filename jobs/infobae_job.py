@@ -1,6 +1,7 @@
 # infobae_job.py -- subclase de job
 
 import datetime
+import time
 
 from jobs.job import job
 
@@ -22,18 +23,3 @@ class infobae_job(job):
         print("Scrapeando...")
         self.scrapper = scrapper(self.requester.payload_text())
         self.scrapper.go_scrape()
-        
-                        
-    
-    # store'ar en la database lo que sea que se obtuvo
-    
-#   def store(self):
-#       # ya se vera...
-#       # but this is gonna refer to self.scrapper.payload(), where the scrape is 
-#       # represented en un formato confortable a la insercion en una database (un {} ?)
-#       
-#       print("Mostrar scrape...")
-#       print("Storear el request crudo (as it is in self.requester.payload_text()) en MongoDB for future reference?")
-#       print("Agarrar la representacion 'piola' (un dictionary?) self.scrapper.payload() e insertarla en SQL?")
-#       pass
-    
