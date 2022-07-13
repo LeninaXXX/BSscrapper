@@ -3,13 +3,13 @@
 ### Scrapper basado en _Beautiful Soup_
 
 * jobs:
-     Cada uno tiene por competencia una pagina ("_target_") sobre la que hacer _scrapping_.
+      Cada uno tiene por competencia una pagina ("_target_") sobre la que hacer _scrapping_.
     Existe para poder personalizar cada caso.
 * requesters:
-	 Para cada ```job```, existe un ```requester``` que se ocupa de traer del servidor remoto el/los documento(s) sobre los que se quiere hacer _scrapping_.
+	  Para cada ```job```, existe un ```requester``` que se ocupa de traer del servidor remoto el/los documento(s) sobre los que se quiere hacer _scrapping_.
 	Existe en funcion de las peculiaridades que ese _requesting_ pudiera tener, como bloqueo por numero de solicitudes.
 * scrappers:
-	 Para cada ```job```, existe un ```scrapper```, ajustado a las peculiaridades de cada pagina en cuestion (i.e.: extraer datos de La Nacion vs extraerlos de Ambito Financiero o Infobae no va a ser, en general, igual, dado que la diagramacion de la pagina va a ser diferente).
+	  Para cada ```job```, existe un ```scrapper```, ajustado a las peculiaridades de cada pagina en cuestion (i.e.: extraer datos de La Nacion vs extraerlos de Ambito Financiero o Infobae no va a ser, en general, igual, dado que la diagramacion de la pagina va a ser diferente).
 	Existe en funcion de las peculiaridades de cada *documento* que un _target_ dado retorne (ya sea *el* o *los* documentos que se recuperen de un _target_ e interese scrappear).
 
 #### Ejemplos durante el desarrollo:
