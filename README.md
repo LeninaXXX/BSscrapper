@@ -34,12 +34,17 @@ Dado *diario*, cada ```diario_job``` especifico, cada ```diario_requester``` esp
 ### Uso
 
 Clonar el repositorio,
+
 	`git clone https://github.com/LeninaXXX/BSscrapper`
 crear un _virtual environment_,
+
 	`python -m venv .venv`
 activar el virtual environment,
+
 	`.venv\Scripts\Activate.bat`
+
 instalar paquetes requeridos; se van a instalar al virtual environment, en `.venv`,
+
 	`pip install -r requirements.txt`
 
 ### To_Do:
