@@ -11,10 +11,11 @@ class requester():
         self.headers = headers
         self.params = params
         # out // "the spoils"
-        # self.pload = None     # full 'requests' response -- 'pload' instead of 'payload' to avoid namespace collision
-        #    turns out that no es conveniente definirlo hasta fetchear
-        #    por lo pronto, llamar a 'payload' o 'payload_text' automaticamente 
-        #    triggerea las llamadas apropiadas para que el return este definido.
+        # self.pload = None     
+        #    full 'requests' response -- 'pload' instead of 'payload' to avoid namespace 
+        #    collision turns out that no es conveniente definirlo hasta fetchear por lo 
+        #    pronto, llamar a 'payload' o 'payload_text' automaticamente triggerea las 
+        #    llamadas apropiadas para que el return este definido.
     def set_url(self, url):
         self.url = url
     

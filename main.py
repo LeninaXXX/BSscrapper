@@ -1,56 +1,22 @@
 # main.py -- main xD
 
-import logging  # TODO: logging pendiente
-import sys      # Para hacer argparsing a lo bruto
+import argparse
+import logging      # TODO: logging pendiente
+# import sys        # Para hacer argparsing a lo bruto
 
-from targets.ambitofinanciero_target import ambitofinanciero_target     # TODO: Segunda prioridad
-from targets.infobae_target import infobae_target                       
-from targets.lanacion_target import lanacion_target
+from jobs.ambitofinanciero_job import ambitofinanciero_job     # TODO: Segunda prioridad
+from jobs.infobae_job import infobae_job                       
+from jobs.lanacion_job import lanacion_job
 
-def ls(x = None):
-    if x:
-        return [elem for elem in dir(x) if elem[:2] != '__']
-    else:
-        return dir()
-    
-# Todo esto es una asquerosidad deforme para salir del paso que tiene a ser extirpada
-#    y reemplazada por un apropiado manejo de parametros en command line
-# 
-# args = list(set(sys.argv[1:]))      # deduplicar argumentos
-# for arg in args:
-#     if arg == "AmbitoFinanciero":
-#         ambitofinanciero = ambitofinanciero_target()    # creo job "Ambito Financiero"
-#         ambitofinanciero.launch()                       # ... lanzo job : request + scrap
-#         #
-#         #                                                 ... inspecciono el resultado si 
-#         #                                                 ... asi lo quiero (placeholder)
-#         #
-#         ambitofinanciero.store()                        # ... commiteo a la database
-#     
-#     elif arg == "Infobae":
-#         infobae = infobae_target()                      # ... job "Infobae"
-#         infobae.launch()                                # ... lanzo
-#         #
-#         # ... inspecciono, si asi lo quiero (placeholder)
-#         #
-#         infobae.store()                                 # ... 
-#     
-#     elif arg == "LaNacion":
-#         lanacion = lanacion_target()                    # ... job "La Nacion"
-#         lanacion.launch()                               # ... lanzo job...
-#         #
-#         # ... inspecciono, si asi lo quiero (placeholder)
-#         #
-#         lanacion.store()                                # ... 
-#     else:
-#         print('"' + arg + '"', "no es un target valido")    # ... y coso (?)
-#         # continue
+cmdline = argparse.ArgumentParser(description = "BSscrapper - Scrapper basado en Beautiful Soup v4")
+cmdline.add_argument("-j", action = "append", dest = "jobs", help = "Job a iniciar")
+cmdline.add_argument("-l", action = "store", dest = "loglvl", help = "loglvl: Nivel de detalle de logging", default = logging.INFO)  # TODO: logging pendiente
+params = cmdline.parse_args()
 
-# ambitofinanciero = ambitofinanciero_target()
-# infobae = infobae_target()
+# TODO: Logging config
+# Logging por default a nivel INFO
+# Permitir, al menos, nivel INFO y DEBUG
 
-lanacion = lanacion_target()
-# lanacion.launch()               
-# lanacion.store()
+lanacion = lanacion_job()
 
 
