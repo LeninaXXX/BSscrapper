@@ -68,7 +68,7 @@ class SQLServer(Database):
 		
 		self.commit()
 	
-	def validate_columns(self,df: pd.DataFrame, table):
+	def validate_columns(self, df: pd.DataFrame, table):
 		cursor = self.conn.cursor()
 		statement = "SELECT column_name FROM analitica.information_schema.columns where UPPER(table_name) = '"
 		statement += table +"' ORDER BY table_name,ORDINAL_POSITION"

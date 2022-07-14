@@ -4,7 +4,7 @@
 
 import requests
 
-class requester():
+class Requester():
     def __init__(self, url, headers = None, params = None):
         # in // "target"
         self.url = url          

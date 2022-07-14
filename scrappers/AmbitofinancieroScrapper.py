@@ -1,14 +1,14 @@
-# infobae_scrapper.py -- subclase de scrapper
+# ambitofinanciero_scrapper.py -- subclase de scrapper
 
-from scrappers.scrapper import scrapper
+from Scrappers.Scrapper import Scrapper
 
 import bs4 as bs
 import html5lib
-    
+
     # In here, everything should be in reference to the 'self.soup' belonging to the superclass. The methods particular 
     # to this subclass is where the freedom to scrap particular stuff should lie, 
     # i.e.: this is pressuambly gonna be where most of the maintenance tasks will lie in the future
-class infobae_scrapper(scrapper):    
+class AmbitofinancieroScrapper(Scrapper):   
     # ##################################################################################################################
     # +++ la magia ... (?)
     # ##################################################################################################################
@@ -28,6 +28,6 @@ class infobae_scrapper(scrapper):
     #     self.scraps.update({"titulo_h1"   : titulo_h1}) 
     #     self.scraps.update({"titulo_href" : titulo_href})
     #     self.scraps.update({"copete_h2"   : copete_h2})
-    #     self.scraps.update({"autor_div"   : autor_div})
+    #     self.scraps.update({"autor_div"   : autor_div})    
     # ##################################################################################################################
     pass    # todavia no esta lista

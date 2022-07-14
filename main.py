@@ -4,9 +4,9 @@ import argparse
 import logging      # TODO: logging pendiente
 # import sys        # Para hacer argparsing a lo bruto
 
-from jobs.ambitofinanciero_job import ambitofinanciero_job     # TODO: Segunda prioridad
-from jobs.infobae_job import infobae_job                       
-from jobs.lanacion_job import lanacion_job
+from Jobs.AmbitofinancieroJob import AmbitofinancieroJob     # TODO: Segunda prioridad
+from Jobs.InfobaeJob import InfobaeJob                       
+from Jobs.LanacionJob import LanacionJob
 
 cmdline = argparse.ArgumentParser(description = "BSscrapper - Scrapper basado en Beautiful Soup v4")
 cmdline.add_argument("-j", action = "append", dest = "jobs", help = "Job a iniciar")
@@ -17,6 +17,6 @@ params = cmdline.parse_args()
 # Logging por default a nivel INFO
 # Permitir, al menos, nivel INFO y DEBUG
 
-lanacion = lanacion_job()
+lanacion = LanacionJob()
 
 
