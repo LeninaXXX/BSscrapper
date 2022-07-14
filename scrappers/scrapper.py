@@ -7,7 +7,7 @@ import html5lib
 import datetime
 
 class Scrapper():
-    def __init__(self, text):
+    def __init__(self, text, pk_timestamp, db_timestamp):
         self.soup = bs.BeautifulSoup(text, "html5lib")
         # TODO: BeautifulSoup admite varios parsers html/xml
         # Este hardwireo es medio asqueroso y deberia admitir generalizacion 

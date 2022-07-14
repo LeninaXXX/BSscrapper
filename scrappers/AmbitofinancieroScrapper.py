@@ -1,6 +1,9 @@
 # ambitofinanciero_scrapper.py -- subclase de scrapper
 
 from Scrappers.Scrapper import Scrapper
+from Scrappers.Scrapper import MainArticle
+from Scrappers.Scrapper import Article
+from Scrappers.Scrapper import Scraps
 
 import bs4 as bs
 import html5lib
@@ -30,4 +33,21 @@ class AmbitofinancieroScrapper(Scrapper):
     #     self.scraps.update({"copete_h2"   : copete_h2})
     #     self.scraps.update({"autor_div"   : autor_div})    
     # ##################################################################################################################
-    pass    # todavia no esta lista
+    
+    # dry run. Scrape ficticio para probar las clases del datamodel y su interfaz
+    # todavia no esta lista
+    def go_scrape(self):
+        self.scrape = Scraps()
+
+        article_main = MainArticle("Titulo article_1", "/Economics/href_article_1", "Economics", "Lorem ipsum")
+        article_1 = Article("Titulo article_1", "/Politics/href_article_1", "Politics", "Lorem ipsum")
+        article_2 = Article("Titulo article_2", "/Society/href_article_2", "Society", "Lorem ipsum")
+        article_3 = Article("Titulo article_3", "/Sports/href_article_3", "Sports", "Lorem ipsum")
+        article_4 = Article("Titulo article_4", "/Police/href_article_4", "Police", "Lorem ipsum")
+        article_5 = Article("Titulo article_4", "/Other/href_article_5", "Other", "Lorem ipsum")
+
+        self.scrape.add_main_article(article_main)
+
+        self.scrape.set_
+
+

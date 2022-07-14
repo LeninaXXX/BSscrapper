@@ -24,7 +24,7 @@ class Job():
         self.requester.go_fetch()
         
         print("Scrapping...")
-        self.scrapper = Scrapper(self.requester.payload_text())
+        self.scrapper = Scrapper(self.requester.payload_text(), self.pk_timestamp, self.db_datetime)
         self.scrapper.go_scrape()
 
     # Consigna a las DBs lo scrappeado
@@ -82,3 +82,4 @@ class Job():
         #  Cuantas notas
         #  Cuantas notas de cada categoria (numericamente)
         self.sql.insert(df, "test_scrap2")      # TODO: En esta instancia, pandas's dataframe is overkill & overhead
+        
