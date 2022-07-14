@@ -109,34 +109,34 @@ Donde ```job/s``` es uno o mas trabajos validos:
 	nOthers
 
 ### MongoDB
-```
-mongodb_document {'id': ..., 'rawData': ..., 'annotations': }
-	id : str()
-	rawData : dict()
-		requests_text : str()
-		requests_reason : str()
-		requests_status_code : str()		# type(req.status_code) == int
-		requests_apparent_encoding : str()
-	annotations : {}
-		main_article: dict()
-		articles : list()
-			article_1 : dict()
-			article_2 : dict()
-			...		
-			article_i : dict()
-				title : str()
-				slug : str()
-				category : str()
-				photo : {}
-					location : {}
-						abs_loc :
-						rel_loc :
-					size : {}
-						abs_size : 
-						rel_size : 
-			...
-			article_n : dict()
-```
+
+	mongodb_document {'id': ..., 'rawData': ..., 'annotations': }
+		id : str()
+		rawData : dict()
+			requests_text : str()
+			requests_reason : str()
+			requests_status_code : str()		# type(req.status_code) == int
+			requests_apparent_encoding : str()
+		annotations : {}
+			main_article: dict()
+			articles : list()
+				article_1 : dict()
+				article_2 : dict()
+				...		
+				article_i : dict()
+					title : str()
+					slug : str()
+					category : str()
+					photo : {}
+						location : {}
+							abs_loc :
+							rel_loc :
+						size : {}
+							abs_size : 
+							rel_size : 
+				...
+				article_n : dict()
+
 
 How to commit this into MongoDB: 
 https://www.mongodb.com/compatibility/json-to-mongodb#how-to-import-json-into-mongodb-using-python
