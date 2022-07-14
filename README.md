@@ -109,6 +109,7 @@ Donde ```job/s``` es uno o mas trabajos validos:
 	nOthers
 
 ### MongoDB
+```
 mongodb_document {'id': ..., 'rawData': ..., 'annotations': }
 	id : str()
 	rawData : dict()
@@ -135,6 +136,7 @@ mongodb_document {'id': ..., 'rawData': ..., 'annotations': }
 						rel_size : 
 			...
 			article_n : dict()
+```
 
 How to commit this into MongoDB: 
 https://www.mongodb.com/compatibility/json-to-mongodb#how-to-import-json-into-mongodb-using-python
