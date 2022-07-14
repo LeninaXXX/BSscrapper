@@ -11,10 +11,25 @@ from db_connectors.MongoDB.MongoDB import MongoDB
 from db_connectors.SQLServer.SQLServer import SQLServer
 
 class Job():
+    # launch'ear el trabajo de requesting + scrapping
+    # ... es competecia de este metodo operar requester y al scrapper
+    # ... y lidiar con las sutilezas de esa tarea
+    def launch(self):
+        # 'pk_timestamp' & 'db_datetime', computed at job launch time
+        self.pk_timestamp = datetime.datetime.now()             # Primary Key timestamp
+        self.db_datetime = time.strftime('%Y-%m-%d %H:%M:%S')   # Momento de la Captura
+
+        print("Requesting...")
+        self.requester = Requester(self.url, headers = self.headers, params = self.params)
+        self.requester.go_fetch()
+        
+        print("Scrapping...")
+        self.scrapper = Scrapper(self.requester.payload_text())
+        self.scrapper.go_scrape()
+
     # Consigna a las DBs lo scrappeado
     #   Dado que lo que se commitea a las DBs tiene que ser universalmente uniforme, este metodo no
-    #   no parece ameritar bajo ningun punto de vista el ser diferente para cada subclase: el ser
-    #   unico implica una garantia de uniformidad
+    #   amerita el ser diferente para cada subclase: el ser unico implica una garantia de uniformidad
     def store(self):
         # #########################################################################################        
         # MongoDB Section
@@ -29,7 +44,7 @@ class Job():
         
         # se refiera al campo 'pload' del objeto job.requester de manera directa para
         # construir el diccioario que va a upsert'ear en MongoDB. *ESTO ES MALA PRACTICA*
-        # TODO: Implementar interfaz que abstraiga ese acceso via metodos.
+        # TODO: Implementar interfaz que abstraiga ese acceso via metodos. DONE! 
         mongo_pload['rawData'] = {}
         mongo_pload['rawData']['requests_text'] = self.requester.pload.text
         mongo_pload['rawData']['requests_reason'] = self.requester.pload.reason
@@ -67,19 +82,3 @@ class Job():
         #  Cuantas notas
         #  Cuantas notas de cada categoria (numericamente)
         self.sql.insert(df, "test_scrap2")      # TODO: En esta instancia, pandas's dataframe is overkill & overhead
-
-    # launch'ear el trabajo de requesting + scrapping
-    # ... es competecia de este metodo operar requester y al scrapper
-    # ... y lidiar con las sutilezas de esa tarea
-    def launch(self):
-        # 'pk_timestamp' & 'db_datetime', computed at job launch time
-        self.pk_timestamp = datetime.datetime.now()             # Primary Key timestamp
-        self.db_datetime = time.strftime('%Y-%m-%d %H:%M:%S')   # Momento de la Captura
-
-        print("Requesting...")
-        self.requester = Requester(self.url, headers = self.headers, params = self.params)
-        self.requester.go_fetch()
-        
-        print("Scrapping...")
-        self.scrapper = Scrapper(self.requester.payload_text())
-        self.scrapper.go_scrape()

@@ -17,6 +17,8 @@ params = cmdline.parse_args()
 # Logging por default a nivel INFO
 # Permitir, al menos, nivel INFO y DEBUG
 
-lanacion = LanacionJob()
+# lanacion = LanacionJob()
+
+ambito = AmbitofinancieroJob()
 
 

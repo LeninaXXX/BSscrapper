@@ -2,8 +2,6 @@
 
 # este modulo deberia ser solo visible a target
 
-from ast import Pass
-from sre_constants import SRE_FLAG_DEBUG
 import bs4 as bs
 import html5lib 
 import datetime
@@ -41,9 +39,8 @@ class Scrapper():
             return self.scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
         # TODO: Aun para fines de debugging, JSON es la que va...
 
-# ####################################
-# Dunno...
-# ####################################
+# #############################################################################
+# Article, modeled a class with an interface
 class Article():
     def __init__(self, title = None, slug = None, category = None, lead = None):
         self.article = {
@@ -75,19 +72,43 @@ class Article():
     def set_lead(self, lead):
         self.article["lead"] = lead
     
-    # photo position seems like a hard inference... a placeholder for now
+    # TODO: photo position seems like a hard inference... a placeholder for now
     def set_photo_position(self, abs, rel):    
         self.article["photo"]["abs"] = None
         self.article["photo"]["rel"] = None
 
-    # photo size seems not that hard an inference... but still... a placeholder for now
+    # TODO: photo size seems not that hard an inference... but still... a placeholder for now
     def set_photo_size(self, abs, rel):
         self.article["photo"]["abs"] = None
         self.article["photo"]["rel"] = None
     
+    def category_as_SQL_key(self):
+        if self.article["category"] == "Economics":
+            return "nEconomics"
+        elif self.article["category"] == "Politics":
+            return "nPolitics"
+        elif self.article["category"] == "Society":
+            return "nSociety"
+        elif self.article["category"] == "Sports":
+            return "nSports"
+        elif self.article["category"] == "Police":
+            return "nPolice"
+        else:
+            return "nOthers"
+    
+    def title(self):
+        return self.article["title"]
+
+    def href(self):
+        return self.article["slug"]
+    
+    def category(self):
+        return self.article["category"]
+
     def as_dict(self):
         return self.article
-
+# #############################################################################
+# MainArticle, a subclass of Article
 class MainArticle(Article):     # just for consistency's sake -- mainArticle is an article
     pass
 
@@ -111,6 +132,26 @@ class Scraps():
     def set_name(self, name):
         self.sql.set_name(name)
         self.mongodb.set_name(name)
+    
+    def add_main_article(self, main_article: MainArticle):
+        self.sql.set_mainArticleTitle = main_article.title()
+        self.sql.set_mainArticleHref = main_article.href()
+        self.sql.set_mainArticleCategory = main_article.category()
+
+        self.mongodb.add_main_article(main_article)
+    
+    def add_article(self, article: Article):
+        
+        self.sql.SQL_row["nArticles"] += 1
+        self.sql.SQL_row[article.category_as_SQL_key()] += 1
+
+        self.mongodb.add_article(article)
+    
+    def append_articles(self, articles: list[Article]):
+        for a in articles:
+            self.sql.SQL_row[a.category_as_SQL_key()] += 1
+
+        self.mongodb.append_articles(articles)        
 
 # ######################################
 # Scraps container to be inserted in SQL
@@ -129,13 +170,13 @@ class ScrapsSQL():
             "mainArticleHref" : None,       # relative url of main article
             "mainArticleCategory" : None,   # category as infered (e.g.: from slug)
             
-            "nArticles" : None,             # number of articles
-            "nEconomics" : None,            # number of articles in the category of 'economics'
-            "nPolitics" : None,             # ... politics
-            "nSociety" : None,              # ... society
-            "nSports" : None,               # ... sports
-            "nPolice" : None,               # ... police
-            "nOthers" : None                # number on a category not known in advance
+            "nArticles" : 0,                # number of articles
+            "nEconomics" : 0,               # number of articles in the category of 'economics'
+            "nPolitics" : 0,                # ... politics
+            "nSociety" : 0,                 # ... society
+            "nSports" : 0,                  # ... sports
+            "nPolice" : 0,                  # ... police
+            "nOthers" : 0                   # number on a category not known in advance
         }
 
     def set_id(self, id):

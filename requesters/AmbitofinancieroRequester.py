@@ -4,6 +4,6 @@ from Requesters.Requester import Requester
 
 import requests
 
-class ambitofinanciero_requester(Requester):
+class AmbitofinancieroRequester(Requester):
     pass
 	
