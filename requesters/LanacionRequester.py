@@ -1,4 +1,4 @@
-# lanacion_requester.py -- subclase de requester
+# LanacionRequester.py -- subclase de Requester
 
 from Requesters.Requester import Requester  # make superclass visible
 

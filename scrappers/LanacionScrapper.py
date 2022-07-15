@@ -1,4 +1,4 @@
-# lanacion_scrapper.py -- subclase de scrapper
+# LanacionScrapper.py -- subclase de Scrapper
 
 from Scrappers.Scrapper import Scrapper # make superclass visible
 

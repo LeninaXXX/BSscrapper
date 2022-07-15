@@ -15,6 +15,12 @@ class AmbitofinancieroScrapper(Scrapper):
 
     # _Dry Run_ para chequear buen funcionamiento del datamodel e insercion en database  
     def go_scrape(self):
+        # propagate PRIMARY KEY & database datetime
+        # self.scraps.set_id(self.pk_timestamp)
+        print(self.pk_timestamp)
+
+        # self.scraps.set_captureDatetime(self.db_timestamp)
+        print(self.db_timestamp)
 
         # make some articles
         article_main = MainArticle("Titulo article_1", "/Economics/href_article_1", "Economics", "Lorem ipsum")
@@ -25,11 +31,13 @@ class AmbitofinancieroScrapper(Scrapper):
         article_5 = Article("Titulo article_4", "/Other/href_article_5", "Other", "Lorem ipsum")
 
         # Articulo principal
-        self.Scraps.add_main_article(article_main)
+        self.scraps.add_main_article(article_main)
 
         # Agrego un articulo
-        self.Scraps.add_article(article_1)
+        self.scraps.add_article(article_1)
         
         # Appendeo unos cuantos
         article_list = [article_2, article_3, article_4, article_5]
-        self.Scraps.append_articles(article_list)
+        self.scraps.append_articles(article_list)
+
+        

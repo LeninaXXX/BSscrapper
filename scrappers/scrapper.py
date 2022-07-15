@@ -1,4 +1,4 @@
-# scrapper.py -- clase general
+# Scrappere.py -- clase general
 
 # este modulo deberia ser solo visible a target
 
@@ -8,7 +8,10 @@ import datetime
 
 class Scrapper():
     def __init__(self, text, pk_timestamp, db_timestamp, name, url):
-        self.Scraps = Scraps(id = pk_timestamp, captureDatetime = db_timestamp, name = name, url = url)
+        self.pk_timestamp = pk_timestamp
+        self.db_timestamp = db_timestamp
+        self.scraps = Scraps(id = pk_timestamp, captureDatetime = db_timestamp, name = name, url = url)
+        
         self.soup = bs.BeautifulSoup(text, "html5lib")
         # TODO: BeautifulSoup admite varios parsers html/xml
         # Este hardwireo es medio asqueroso y deberia admitir generalizacion 
@@ -23,22 +26,22 @@ class Scrapper():
     # (por representacion piola se entiende una que 'calque' el data model de la database)
     # ... no veo razon para que la representacion interna del scrap 
     #     en la clase/instancia no sea ya la 'representacion piola'
-    def payload(self):
-        try:                    # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-            return self.Scraps  # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-        except:                 # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-            self.go_scrape()    # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-            return self.Scraps  # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-    
-    # esto esta mostly con fines de debugging, para ver si el scrapper 
-    # esta (valga la redundancia...) scrappeando lo que yo quiero
-    def payload_as_text(self):
-        try:
-            return self.Scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
-        except:                             # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
-            self.go_scrape()                # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
-            return self.Scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
-        # TODO: Aun para fines de debugging, JSON es la que va...
+    # def payload(self):
+    #     try:                    # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
+    #         return self.scraps  # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
+    #     except:                 # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
+    #         self.go_scrape()    # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
+    #         return self.scraps  # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
+    # 
+    # # esto esta mostly con fines de debugging, para ver si el scrapper 
+    # # esta (valga la redundancia...) scrappeando lo que yo quiero
+    # def payload_as_text(self):
+    #     try:
+    #         return self.scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
+    #     except:                             # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
+    #         self.go_scrape()                # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
+    #         return self.scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
+    #     # TODO: Aun para fines de debugging, JSON es la que va...
 
 # #############################################################################
 # Article, modeled a class with an interface
@@ -278,7 +281,7 @@ class ScrapsMongoDB():
             self.add_article(a)
 
     def add_main_article(self, main_article: MainArticle):
-        self.MongoDB_doc["annotations"]["main_article"] = main_article.ad_dict()
+        self.MongoDB_doc["annotations"]["main_article"] = main_article.as_dict()
 
     def as_dict(self):
         return self.MongoDB_doc

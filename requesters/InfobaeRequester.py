@@ -1,4 +1,4 @@
-# infobae_requester.py -- subclase de requester
+# InfobaeRequester.py -- subclase de Requester
 
 from Requesters.Requester import Requester
 

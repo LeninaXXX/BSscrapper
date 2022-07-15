@@ -1,4 +1,4 @@
-# infobae_scrapper.py -- subclase de scrapper
+# InfobaeScrapper.py -- subclase de Scrapper
 
 from Scrappers.Scrapper import Scrapper
 
