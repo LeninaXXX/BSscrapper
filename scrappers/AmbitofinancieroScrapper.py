@@ -1,4 +1,4 @@
-# ambitofinanciero_scrapper.py -- subclase de scrapper
+# AmbitofinancieroScrapper.py -- subclase de Scrapper
 
 from Scrappers.Scrapper import Scrapper
 from Scrappers.Scrapper import MainArticle

@@ -1,4 +1,4 @@
-# ambitofinanciero_job.py -- subclase de job
+# AmbitofinancieroJob.py -- subclase de Job
 
 import datetime
 import time

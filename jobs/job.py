@@ -1,4 +1,4 @@
-# job.py -- clase general
+# Job.py -- clase general
 
 import pandas as pd
 import datetime
@@ -23,7 +23,12 @@ class Job():
         self.requester.go_fetch()
         
         print("Scrapping...")
-        self.scrapper = Scrapper(self.requester.payload_text(), self.pk_timestamp, self.db_datetime, self.name, self.url)
+        self.scrapper = Scrapper(self.requester.payload_text(),     # TODO: to change to whole requests ret
+                                 self.pk_timestamp, 
+                                 self.db_datetime, 
+                                 self.name, 
+                                 self.url
+                                )
         self.scrapper.go_scrape()
 
     # Consigna a las DBs lo scrappeado

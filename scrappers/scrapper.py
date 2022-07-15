@@ -126,15 +126,16 @@ class Scraps():
     def set_id(self, id):
         self.sql.set_id(id)
         self.mongodb.set_id(id)
-
     def set_captureDatetime(self, captureDatetime):
         self.sql.set_captureDatetime(captureDatetime)
         self.mongodb.set_captureDatetime(captureDatetime)
-    
     def set_name(self, name):
         self.sql.set_name(name)
         self.mongodb.set_name(name)
-    
+    def set_url(self, url):
+        self.sql.set_url(url)        
+        self.mongodb.set_url(url)        
+
     def add_main_article(self, main_article: MainArticle):
         self.sql.set_mainArticleTitle = main_article.title()
         self.sql.set_mainArticleHref = main_article.href()
@@ -180,43 +181,32 @@ class ScrapsSQL():
 
     def set_id(self, id):
         self.SQL_row["id"] = id
-
     def set_captureDatetime(self, captureDatetime):
         self.SQL_row["captureDatetime"] = captureDatetime
-
     def set_name(self, name):
         self.SQL_row["name"] = name
-
     def set_url(self, url):
         self.SQL_row["url"] = url
 
     def set_mainArticleTitle(self, mainArticleTitle):
         self.SQL_row["mainArticleTitle"] = mainArticleTitle
-
     def set_mainArticleHref(self, mainArticleHref):
         self.SQL_row["mainArticleHref"] = mainArticleHref
-
     def set_mainArticleCategory(self, mainArticleCategory):
         self.SQL_row["mainArticleCategory"] = mainArticleCategory
 
     def set_nArticles(self, nArticles):
         self.SQL_row["nArticles"] = nArticles
-
     def set_nEconomics(self, nEconomics):
         self.SQL_row["nEconomics"] = nEconomics
-
     def set_nPolitics(self, nPolitics):
         self.SQL_row["nPolitics"] = nPolitics
-
     def set_nSociety(self, nSociety):
         self.SQL_row["nSociety"] = nSociety
-
     def set_nSports(self, nSports):
         self.SQL_row["nSports"] = nSports
-
     def set_nPolice(self, nPolice):
         self.SQL_row["nPolice"] = nPolice
-
     def set_nOthers(self, nOthers):
         self.SQL_row["nOthers"] = nOthers
 
