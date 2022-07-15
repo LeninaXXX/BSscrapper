@@ -138,7 +138,8 @@ Donde ```job/s``` es uno o mas trabajos validos:
 				article_n : dict()
 
 
-How to commit this into MongoDB: 
+ How to commit this into MongoDB: 
+
 https://www.mongodb.com/compatibility/json-to-mongodb#how-to-import-json-into-mongodb-using-python
 ---
 ## Log

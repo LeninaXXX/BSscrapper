@@ -7,13 +7,14 @@ import html5lib
 import datetime
 
 class Scrapper():
-    def __init__(self, text, pk_timestamp, db_timestamp):
+    def __init__(self, text, pk_timestamp, db_timestamp, name, url):
+        self.Scraps = Scraps(id = pk_timestamp, captureDatetime = db_timestamp, name = name, url = url)
         self.soup = bs.BeautifulSoup(text, "html5lib")
         # TODO: BeautifulSoup admite varios parsers html/xml
         # Este hardwireo es medio asqueroso y deberia admitir generalizacion 
         # que a su vez admita mas versatilidad al ser usado desde 'Job'
        
-        # self.scraps = None    # Where the scrapped stuff is gonna be 
+        # self.Scraps = None    # Where the scrapped stuff is gonna be 
                                 # tucked away in *SOME* representation
                                 # still to be well-defined
         # esto no va a estar definido hasta tanto no se tire un go_scrape()
@@ -24,19 +25,19 @@ class Scrapper():
     #     en la clase/instancia no sea ya la 'representacion piola'
     def payload(self):
         try:                    # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-            return self.scraps  # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
+            return self.Scraps  # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
         except:                 # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
             self.go_scrape()    # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-            return self.scraps  # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
+            return self.Scraps  # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
     
     # esto esta mostly con fines de debugging, para ver si el scrapper 
     # esta (valga la redundancia...) scrappeando lo que yo quiero
     def payload_as_text(self):
         try:
-            return self.scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
+            return self.Scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
         except:                             # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
             self.go_scrape()                # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
-            return self.scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
+            return self.Scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
         # TODO: Aun para fines de debugging, JSON es la que va...
 
 # #############################################################################
@@ -71,7 +72,7 @@ class Article():
 
     def set_lead(self, lead):
         self.article["lead"] = lead
-    
+
     # TODO: photo position seems like a hard inference... a placeholder for now
     def set_photo_position(self, abs, rel):    
         self.article["photo"]["abs"] = None
@@ -81,7 +82,7 @@ class Article():
     def set_photo_size(self, abs, rel):
         self.article["photo"]["abs"] = None
         self.article["photo"]["rel"] = None
-    
+
     def category_as_SQL_key(self):
         if self.article["category"] == "Economics":
             return "nEconomics"
@@ -107,6 +108,7 @@ class Article():
 
     def as_dict(self):
         return self.article
+
 # #############################################################################
 # MainArticle, a subclass of Article
 class MainArticle(Article):     # just for consistency's sake -- mainArticle is an article
@@ -114,7 +116,7 @@ class MainArticle(Article):     # just for consistency's sake -- mainArticle is 
 
 # ################
 # Scraps container
-# ################
+# #################################################################################################
 # va a hacer las veces de 'bundle' de todo lo que 'job.store()' tenga que commitear a las databases
 class Scraps():    
     def __init__(self, id = None, captureDatetime = None, name = None, url = None):
@@ -137,20 +139,17 @@ class Scraps():
         self.sql.set_mainArticleTitle = main_article.title()
         self.sql.set_mainArticleHref = main_article.href()
         self.sql.set_mainArticleCategory = main_article.category()
-
         self.mongodb.add_main_article(main_article)
     
     def add_article(self, article: Article):
         
         self.sql.SQL_row["nArticles"] += 1
         self.sql.SQL_row[article.category_as_SQL_key()] += 1
-
         self.mongodb.add_article(article)
     
     def append_articles(self, articles: list[Article]):
         for a in articles:
             self.sql.SQL_row[a.category_as_SQL_key()] += 1
-
         self.mongodb.append_articles(articles)        
 
 # ######################################
