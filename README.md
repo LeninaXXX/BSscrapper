@@ -143,3 +143,6 @@ Donde ```job/s``` es uno o mas trabajos validos:
 https://www.mongodb.com/compatibility/json-to-mongodb#how-to-import-json-into-mongodb-using-python
 ---
 ## Log
+
+pyodbc : pyodbc 4.0.32 => pyodbc 4.0.34
+
