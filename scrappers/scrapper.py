@@ -1,50 +1,21 @@
-# Scrappere.py -- clase general
+# Scrapper.py -- clase general
 
-# este modulo deberia ser solo visible a target
-
-import bs4 as bs
-import html5lib 
-import datetime
+# this module should only be visible to Job.py
 
 class Scrapper():
-    def __init__(self, text, pk_timestamp, db_timestamp, name, url):
-        self.pk_timestamp = pk_timestamp
-        self.db_timestamp = db_timestamp
-        self.scraps = Scraps(id = pk_timestamp, captureDatetime = db_timestamp, name = name, url = url)
+    def __init__(self, name, payload, primary_key = None, capture_datetime = None):
         
-        self.soup = bs.BeautifulSoup(text, "html5lib")
-        # TODO: BeautifulSoup admite varios parsers html/xml
-        # Este hardwireo es medio asqueroso y deberia admitir generalizacion 
-        # que a su vez admita mas versatilidad al ser usado desde 'Job'
-       
-        # self.Scraps = None    # Where the scrapped stuff is gonna be 
-                                # tucked away in *SOME* representation
-                                # still to be well-defined
-        # esto no va a estar definido hasta tanto no se tire un go_scrape()
+        self.scraps = Scraps(name = name,
+							 primary_key = primary_key, 		# at this point, primary_key nor capture_datetime are set.
+							 capture_date = capture_datetime)	# at this point, primary_key nor capture_datetime are set.
+																# it's done at job.launch() time
 
-    # Este metodo va a proveer accesso a la representacion piola del scrape
-    # (por representacion piola se entiende una que 'calque' el data model de la database)
-    # ... no veo razon para que la representacion interna del scrap 
-    #     en la clase/instancia no sea ya la 'representacion piola'
-    # def payload(self):
-    #     try:                    # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-    #         return self.scraps  # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-    #     except:                 # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-    #         self.go_scrape()    # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-    #         return self.scraps  # BOILERPLATE!: Which exception? NameError? AttributeError? ... both?
-    # 
-    # # esto esta mostly con fines de debugging, para ver si el scrapper 
-    # # esta (valga la redundancia...) scrappeando lo que yo quiero
-    # def payload_as_text(self):
-    #     try:
-    #         return self.scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
-    #     except:                             # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
-    #         self.go_scrape()                # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
-    #         return self.scraps.__repr__()   # BOILERPLATE!: which exception? Should call self.payload() and then textify that?
-    #     # TODO: Aun para fines de debugging, JSON es la que va...
-
-# #############################################################################
-# Article, modeled a class with an interface
+	def set_primary_key(primary_key):
+		self.scraps.set_id(primary_key)
+		
+	def set_capture_datetime(capture_datetime):
+		self.scraps.set_captureDatetime(capture_datetime)
+		
 class Article():
     def __init__(self, title = None, slug = None, category = None, lead = None):
         self.article = {
@@ -112,19 +83,19 @@ class Article():
     def as_dict(self):
         return self.article
 
-# #############################################################################
-# MainArticle, a subclass of Article
-class MainArticle(Article):     # just for consistency's sake -- mainArticle is an article
+class MainArticle(Article):     # mainArticle is just an article. Same structure ... for now?
     pass
 
-# ################
-# Scraps container
-# #################################################################################################
-# va a hacer las veces de 'bundle' de todo lo que 'job.store()' tenga que commitear a las databases
 class Scraps():    
-    def __init__(self, id = None, captureDatetime = None, name = None, url = None):
-        self.sql = ScrapsSQL(id, captureDatetime, name, url)
-        self.mongodb = ScrapsMongoDB(id, captureDatetime, name, url)
+    def __init__(self, job_name = None, primary_key = None, capture_datetime = None):
+        # init SQL scraps
+        self.sql = ScrapsSQL(job_name = job_name, 
+							 primary_key = primary_key, 
+							 capture_datetime = capture_datetime)
+        # init MongoDB scraps
+        self.mongodb = ScrapsMongoDB(job_name = job_name, 
+									 primary_key = primary_key, 
+									 capture_datetime = capture_datetime)
 
     def set_id(self, id):
         self.sql.set_id(id)
@@ -156,30 +127,26 @@ class Scraps():
             self.sql.SQL_row[a.category_as_SQL_key()] += 1
         self.mongodb.append_articles(articles)        
 
-# ######################################
-# Scraps container to be inserted in SQL
-# ######################################
-# wrappea un dict + un conjunto de metodos con el que abstraer el accederlo
 class ScrapsSQL():
-    def __init__(self, id = None, captureDatetime = None, name = None, url = None):
+    def __init__(self, job_name = None, primary_key = None, capture_datetime = None):
         # SQL DataModel
         self.SQL_row = {
-            "id" : id,                              # PRIMARY KEY : name + timestamp @ job launch time
-            "captureDatetime" : captureDatetime,    # datetime @ job launch time
-            "name" : name,                          # Name of the target (e.g.: La_Nacion)
-            "url" : url,                            # ACTUAL url being scrapped 
+            "id" : primary_key,						# PRIMARY KEY : name + timestamp @ job launch time
+            "name" : job_name,                      # Name of the target (e.g.: La_Nacion)
+            "captureDatetime" : capture_datetime,   # datetime @ job launch time
+            "url" : None,                           # ACTUAL url being scrapped 
             
-            "mainArticleTitle" : None,      # 
-            "mainArticleHref" : None,       # relative url of main article
-            "mainArticleCategory" : None,   # category as infered (e.g.: from slug)
-            
-            "nArticles" : 0,                # number of articles
-            "nEconomics" : 0,               # number of articles in the category of 'economics'
-            "nPolitics" : 0,                # ... politics
-            "nSociety" : 0,                 # ... society
-            "nSports" : 0,                  # ... sports
-            "nPolice" : 0,                  # ... police
-            "nOthers" : 0                   # number on a category not known in advance
+            "mainArticleTitle" : None,      		# 
+            "mainArticleHref" : None,       		# relative url of main article
+            "mainArticleCategory" : None,   		# category as infered (e.g.: from slug)
+					
+            "nArticles" : 0,                		# number of articles
+            "nEconomics" : 0,               		# number of articles in the category of 'economics'
+            "nPolitics" : 0,                		# ... politics
+            "nSociety" : 0,                 		# ... society
+            "nSports" : 0,                  		# ... sports
+            "nPolice" : 0,                  		# ... police
+            "nOthers" : 0                   		# number on a category not known in advance
         }
 
     def set_id(self, id):
@@ -216,16 +183,14 @@ class ScrapsSQL():
     def as_dict(self):
         return self.SQL_row
 
-# ##########################################
-# Scraps container to be inserted in MongoDB
-# ##########################################
 class ScrapsMongoDB():
-    def __init__(self, id = None, captureDatetime = None, name = None, url = None):
+    def __init__(self, job_name = None, primary_key = None, capture_datetime = None):
+        # MongoDB DataModel
         self.MongoDB_doc = {
-            "id" : id,
-            "captureDateTime" : captureDatetime,
-            "name" : name,
-            "url" : url,
+            "id" : primary_key,
+            "name" : job_name,
+            "captureDateTime" : capture_datetime,
+            "url" : None,
             
             "rawData" : {
                 "request_text" : None,
@@ -251,7 +216,7 @@ class ScrapsMongoDB():
                         }
                     }
                 },
-                "articles" : []     # ... a list of dict, each one w/same structure as main_article
+                "articles" : []
             }
         }
 
@@ -267,7 +232,7 @@ class ScrapsMongoDB():
     def set_url(self, url):
         self.MongoDB_doc["url"] = url
 
-    def set_rawData(self, ret):     # req is supposed to be a requests returned object
+    def set_rawData(self, ret):
         self.MongoDB_doc["rawData"]["request_text"] = ret.text
         self.MongoDB_doc["rawData"]["request_reason"] = ret.reason
         self.MongoDB_doc["rawData"]["request_status_code"] = ret.status_code

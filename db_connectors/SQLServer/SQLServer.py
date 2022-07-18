@@ -1,10 +1,16 @@
+# TODO: Re do
+
 from db_connectors.Database import Database
-import traceback
-import numpy as np
+
 import pyodbc
+
+import numpy as np
 import pandas as pd
-import logging
+
 from utils.sqlvalid import insertvalid
+
+import logging
+import traceback
 
 class SQLServer(Database):
 	def __init__(self):

@@ -1,10 +1,9 @@
-# main.py -- main xD
+# main.py -- main 
 
 import argparse
 import logging      # TODO: logging pendiente
-# import sys        # Para hacer argparsing a lo bruto
 
-from Jobs.AmbitofinancieroJob import AmbitofinancieroJob     # TODO: Segunda prioridad
+from Jobs.AmbitofinancieroJob import AmbitofinancieroJob
 from Jobs.InfobaeJob import InfobaeJob                       
 from Jobs.LanacionJob import LanacionJob
 
@@ -14,12 +13,9 @@ cmdline.add_argument("-l", action = "store", dest = "loglvl", help = "loglvl: Ni
 params = cmdline.parse_args()
 
 # TODO: Logging config
-# Logging por default a nivel INFO
-# Permitir, al menos, nivel INFO y DEBUG
-
-# lanacion = LanacionJob()
 
 ambito = AmbitofinancieroJob()
-# ambito.launch()
+
+# TODO: Logging and job diagnostics final dump
 
 

@@ -14,13 +14,13 @@ class AmbitofinancieroJob(Job):
         self.url = url
         self.headers = headers
         self.params = params
-        self.pk_timestamp = None    # absurdly precise timestamp, to be used as a PRIMARY KEY
-        self.db_datetime = None     # properly formatted datetime for the database
-        # this data get's defined at Job.launch() time
-        # for now, this get to be passed to Scrapper's constructor just 
-        # as a placeholder but they remain undefined until launch time
+        
+        self.primary_key = None			# This signals not ready to commit to database
+        self.capture_datetime = None	# This signals not ready to commit to database
 
         self.requester = Requester(self.url, headers = self.headers, params = self.params)
-        self.scrapper = Scrapper(self.requester.payload_text(), self.pk_timestamp, self.db_datetime, self.name, self.url)
+        
+        self.scrapper = Scrapper(self.name, self.requester.payload(), self.primary_key, self.capture_datetime, self.url)
         # TODO: to change to whole requests, and make Scrapper deal with it???
         # TODO: to get rid of passing self.pk_timestamp & self.db_datetime given that those are set at launch() time
+        #		It is <target>Job the one in charge of registering the timestamp & primary key

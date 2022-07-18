@@ -1,21 +1,16 @@
 # requester.py -- clase general
 
-# este modulo deberia ser solo visible a target
+# this module should only be visible to Job.py, that is, to class Job and its subclasses <target>Job
 
 import requests
 
 class Requester():
     def __init__(self, url, headers = None, params = None):
-        # in // "target"
         self.url = url          
         self.headers = headers
         self.params = params
-        # out // "the spoils"
-        # self.pload = None     
-        #    full 'requests' response -- 'pload' instead of 'payload' to avoid namespace 
-        #    collision turns out that no es conveniente definirlo hasta fetchear por lo 
-        #    pronto, llamar a 'payload' o 'payload_text' automaticamente triggerea las 
-        #    llamadas apropiadas para que el return este definido.
+        self.ret = None
+
     def set_url(self, url):
         self.url = url
     
@@ -26,21 +21,28 @@ class Requester():
         self.params = params
     
     def go_fetch(self):
-        self.pload = requests.get(self.url, headers = self.headers, params = self.params)
+        self.ret = requests.get(self.url, headers = self.headers, params = self.params)
         
-    # this makes sense for the generality's sake and _the future_
-    # i.e.: en algun punto puede interesarme manosear el pload ("payload")
     def payload(self):
-        try:
-            return self.pload
-        except NameError:
-            self.go_fetch()
-            return self.pload
+		if self.ret != None:
+			return ret
         
-    # ... for the sake of straightforwardness because it's what BeautifulSoup wants
     def payload_text(self):
-        try:
-            return self.pload.text  # return self.payload().text?
-        except AttributeError:
-            self.go_fetch()
-            return self.pload.text  # return self.payload().text?    
+        if self.ret != None:
+			return self.ret.text()
+	
+	def payload_reason(self):
+		return self.ret.reason if self.ret != None else return None
+	
+	def payload_status_code(self):
+		return self.ret.status_code if self.ret != None else return None
+
+	def payload_apparent_encoding(self)
+		return self.ret.apparent_encoding if self.ret != None else return None
+
+	def payload_content(self):
+		return self.ret.content if self.ret != None else return None
+		
+	def payload_elapsed(self):
+		return self.ret.elapsed if self.ret != None else return None
+		

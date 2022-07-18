@@ -1,7 +1,12 @@
-import logging
+# TODO: Re do
+
 from db_connectors.Database import Database
-import pandas as pd
+
 from pymongo import MongoClient
+
+import pandas as pd
+
+import logging
 
 class MongoDB(Database):
 	def __init__(self):
