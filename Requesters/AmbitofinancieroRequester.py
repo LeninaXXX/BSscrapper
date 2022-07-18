@@ -1,4 +1,4 @@
-# AmbitofinancieroRequester.py -- subclase de Requester
+# AmbitofinancieroRequester.py -- Requester subclass
 
 from Requesters.Requester import Requester
 

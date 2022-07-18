@@ -1,4 +1,4 @@
-# requester.py -- clase general
+# Requester.py -- general superclass
 
 # this module should only be visible to Job.py, that is, to class Job and its subclasses <target>Job
 

@@ -1,4 +1,4 @@
-# Job.py -- clase general
+# Job.py -- general superclass
 
 import pandas as pd
 import datetime
@@ -10,8 +10,7 @@ from Scrappers.Scrapper import Scrapper
 from db_connectors.MongoDB.MongoDB import MongoDB
 from db_connectors.SQLServer.SQLServer import SQLServer
 
-class Job():
-    
+class Job():    
     def launch(self):
 		# Generate PRIMARY KEY & set capture_datetime at THIS moment
         self.primary_key = self.name + '_' + str(datetime.datetime.now())

@@ -1,4 +1,4 @@
-# Scrapper.py -- clase general
+# Scrapper.py -- general superclass
 
 # this module should only be visible to Job.py
 
@@ -14,7 +14,7 @@ class Scrapper():
 		self.scraps.set_id(primary_key)
 		
 	def set_capture_datetime(capture_datetime):
-		self.scraps.set_captureDatetime(capture_datetime)
+		self.scraps.set_capture_datetime(capture_datetime)
 		
 class Article():
     def __init__(self, title = None, slug = None, category = None, lead = None):
@@ -48,12 +48,12 @@ class Article():
         self.article["lead"] = lead
 
     # TODO: photo position seems like a hard inference... a placeholder for now
-    def set_photo_position(self, abs, rel):    
+    def set_photo_position(self, absolute, relative):    
         self.article["photo"]["abs"] = None
         self.article["photo"]["rel"] = None
 
     # TODO: photo size seems not that hard an inference... but still... a placeholder for now
-    def set_photo_size(self, abs, rel):
+    def set_photo_size(self, absolute, relative):
         self.article["photo"]["abs"] = None
         self.article["photo"]["rel"] = None
 
@@ -97,12 +97,13 @@ class Scraps():
 									 primary_key = primary_key, 
 									 capture_datetime = capture_datetime)
 
-    def set_id(self, id):
-        self.sql.set_id(id)
-        self.mongodb.set_id(id)
-    def set_captureDatetime(self, captureDatetime):
-        self.sql.set_captureDatetime(captureDatetime)
-        self.mongodb.set_captureDatetime(captureDatetime)
+    def set_primary_key(self, primary_key):
+        self.sql.set_primary_key(primary_key)
+        self.mongodb.set_primary_key(primary_key)
+    def set_capture_datetime(self, capture_datetime):
+        self.sql.set_capture_datetime(capture_datetime)
+        self.mongodb.set_capture_datetime(capture_datetime)
+        
     def set_name(self, name):
         self.sql.set_name(name)
         self.mongodb.set_name(name)
@@ -149,10 +150,11 @@ class ScrapsSQL():
             "nOthers" : 0                   		# number on a category not known in advance
         }
 
-    def set_id(self, id):
-        self.SQL_row["id"] = id
-    def set_captureDatetime(self, captureDatetime):
-        self.SQL_row["captureDatetime"] = captureDatetime
+    def set_primary_key(self, primary_key):
+        self.SQL_row["id"] = primary_key
+    def set_capture_datetime(self, capture_datetime):
+        self.SQL_row["captureDatetime"] = capture_datetime
+        
     def set_name(self, name):
         self.SQL_row["name"] = name
     def set_url(self, url):
@@ -220,11 +222,11 @@ class ScrapsMongoDB():
             }
         }
 
-    def set_id(self, id):
-        self.MongoDB_doc["id"] = id
+    def set_primary_key(self, primary_key):
+        self.MongoDB_doc["id"] = primary_key
 
-    def set_captureDatetime(self, captureDatetime):
-        self.MongoDB_doc["captureDatetime"] = captureDatetime
+    def set_capture_datetime(self, capture_datetime):
+        self.MongoDB_doc["captureDatetime"] = capture_datetime
 
     def set_name(self, name):
         self.MongoDB_doc["name"] = name
