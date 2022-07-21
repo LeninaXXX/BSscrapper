@@ -24,25 +24,23 @@ class Requester():
         self.ret = requests.get(self.url, headers = self.headers, params = self.params)
         
     def payload(self):
-		if self.ret != None:
-			return ret
+        return self.ret
         
     def payload_text(self):
-        if self.ret != None:
-			return self.ret.text()
-	
-	def payload_reason(self):
-		return self.ret.reason if self.ret != None else return None
-	
-	def payload_status_code(self):
-		return self.ret.status_code if self.ret != None else return None
+        return self.ret.text if self.ret != None else None
 
-	def payload_apparent_encoding(self)
-		return self.ret.apparent_encoding if self.ret != None else return None
+    def payload_reason(self):
+        return self.ret.reason if self.ret != None else None
+	
+    def payload_status_code(self):
+        return self.ret.status_code if self.ret != None else None
 
-	def payload_content(self):
-		return self.ret.content if self.ret != None else return None
+    def payload_apparent_encoding(self):
+        return self.ret.apparent_encoding if self.ret != None else None
+
+    def payload_content(self):
+        return self.ret.content if self.ret != None else None
 		
-	def payload_elapsed(self):
-		return self.ret.elapsed if self.ret != None else return None
+    def payload_elapsed(self):
+        return self.ret.elapsed if self.ret != None else None
 		

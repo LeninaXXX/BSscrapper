@@ -2,6 +2,7 @@
 
 import argparse
 import logging      # TODO: logging pendiente
+import time
 
 from Jobs.AmbitofinancieroJob import AmbitofinancieroJob
 from Jobs.InfobaeJob import InfobaeJob                       
@@ -15,7 +16,11 @@ params = cmdline.parse_args()
 # TODO: Logging config
 
 ambito = AmbitofinancieroJob()
-
-# TODO: Logging and job diagnostics final dump
+while True:
+    infobae = InfobaeJob()
+    infobae.launch()
+    infobae.store()
+    print("Taking a 5 minute nap...")
+    time.sleep(5*60)
 
 

@@ -21,18 +21,39 @@ class Job():
         
         print("Scrapping...")
         self.scrapper.set_primary_key(self.primary_key)
-        self.scrapper.set_capture_datetime(self.capture_datetime)
+        self.scrapper.set_capture_datetime(self.capture_datetime)       
         
-        self.scrapper.go_scrape()
+        self.scrapper.go_scrape(self.requester.payload())
 
     def store(self):
-		
-        # self.mongo = MongoDB()        # 
-        # self.mongo.upsertDict(self.scrapper.scraps.mongodb.as_dict(), 'TESTE', self.name)
-        # 
+        from pprint import pprint   # XXX: DEBUGGING STUFF
+        with open('.test\debugdump.txt', 'w') as f:
+            print("MongoDB RawData", file = f)
+            print("---------------", file = f)
+            pprint(self.scrapper.get_MongoDB_raw_scraps_as_dict(), stream = f)
+
+            print("\nMongoDB CleanData", file = f)
+            print("-----------------", file = f)
+            pprint(self.scrapper.get_MongoDB_clean_scraps_as_dict(), stream = f)
+
+            print("\nSQL Scraps", file = f)
+            print("----------", file = f)
+            pprint(self.scrapper.get_SQL_scraps_as_dict(), stream = f)
+
+        # MongoDB insertions
+        self.mongo = MongoDB()    
+        self.mongo.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', self.name + '_rawdata')
+        self.mongo.upsertDict(self.scrapper.get_MongoDB_clean_scraps_as_dict(), 'TESTE', self.name + '_cleansed')
+        
+        # SQL insertions
+        # given the SQL connector at hand, which take pandas's DataFrames as input, this requires some massaging
+        self.sql = SQLServer()
+        df = pd.DataFrame({k : [v] for (k, v) in self.scrapper.get_SQL_scraps_as_dict().items()})
+        self.sql.insert(df, "test_scrap")   # TODO: En esta instancia, pandas's dataframe is overkill & overhead
+
         # self.sql = SQLServer()        
         #         dd = self.scrapper.scraps.sql.as_dict()        
         # dl = {k : [v] for (k, v) in dd.items()}
         # df = pd.DataFrame(dl)
         # self.sql.insert(df, "test_scrap3")      # TODO: En esta instancia, pandas's dataframe is overkill & overhead
-		
+

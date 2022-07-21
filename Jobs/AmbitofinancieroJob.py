@@ -19,8 +19,7 @@ class AmbitofinancieroJob(Job):
         self.capture_datetime = None	# This signals not ready to commit to database
 
         self.requester = Requester(self.url, headers = self.headers, params = self.params)
-        
-        self.scrapper = Scrapper(self.name, self.requester.payload(), self.primary_key, self.capture_datetime, self.url)
-        # TODO: to change to whole requests, and make Scrapper deal with it???
-        # TODO: to get rid of passing self.pk_timestamp & self.db_datetime given that those are set at launch() time
-        #		It is <target>Job the one in charge of registering the timestamp & primary key
+        self.scrapper = Scrapper(self.name, self.url, self.primary_key, self.capture_datetime)
+        # XXX: does it make sense to pass primary_key & capture_datetime to Scrapper at construction time???
+        # XXX: Wouldn't it be better to pass the full requester and allow Scrapper.go_scrape() full freedom
+        #      regarding what to scrap as rawdata?

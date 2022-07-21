@@ -57,14 +57,16 @@ Donde ```job/s``` es uno o mas trabajos validos:
 
 ## To_Do:
 
- * Hay metodos en la subclase `lanacion_job` que en una primera aproximacion los puse ahi pensando que iban a tener preculiaridades propias de _La Nacion_, pero que en realidad son completamente genericos, y pueden moverse a la superclase (`job`). Para las subclases solo parecen realmente indispensables cosas como _url_. Si bien tal vez esa logica se podria implementar como instancias de una unica clase, por lo pronto me parece sensato dejarlas por si el scrapping evoluciona a algo mas sofisticado que extraer uno o mas articulos de la portada: representa una buena separacion de tareas, y no complica especialmente las cosas.
+* El _DataModel_ es medio un moving target y esta pendiente de actualizacion...
+
+ ~~* Hay metodos en la subclase `lanacion_job` que en una primera aproximacion los puse ahi pensando que iban a tener preculiaridades propias de _La Nacion_, pero que en realidad son completamente genericos, y pueden moverse a la superclase (`job`). Para las subclases solo parecen realmente indispensables cosas como _url_. Si bien tal vez esa logica se podria implementar como instancias de una unica clase, por lo pronto me parece sensato dejarlas por si el scrapping evoluciona a algo mas sofisticado que extraer uno o mas articulos de la portada: representa una buena separacion de tareas, y no complica especialmente las cosas.~~
  
  * _DBs_:
     * Hace falta definir el _data model_.
 	~~* Por lo pronto se pueden meter _con la pala ancha_ en MongoDB???~~
 	~~* Preferiria tener la asistencia/supervision de alguien que este familiarizado con las DBs. Dado que conviven bases de datos _de produccion_, mi temor de mandarme un moco es sencillamente mayusculo (aun si creo que no soy tan animal, la precaucion no esta de mas).~~
 	* ... logging...
-	* ... to provide ease of debugging?
+	* ... to provide ease of debugging at database insertion level
 	* Alertas!!!
 	
  * _Ambito Financiero_ & _Infobae_ me quedaron pendientes.
@@ -145,4 +147,6 @@ https://www.mongodb.com/compatibility/json-to-mongodb#how-to-import-json-into-mo
 ## Log
 
 pyodbc : pyodbc 4.0.32 => pyodbc 4.0.34
-
+MongoDB_doc separado en MongoDB_raw_doc & MongoDB_clean_doc.
+    MongoDB_raw_doc to be commited to _RAWDATA Collection_
+    MongoDB_clean_doc to be commited to _CLEANSED Collection_
