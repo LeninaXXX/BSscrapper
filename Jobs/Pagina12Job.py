@@ -8,7 +8,7 @@ from Jobs.Job import Job
 from Requesters.Pagina12Requester import Pagina12Requester as Requester
 from Scrappers.Pagina12Scrapper import Pagina12Scrapper as Scrapper
 
-class InfobaeJob(Job):
+class Pagina12Job(Job):
     def __init__(self, url = "https://www.pagina12.com.ar/", headers = None, params = None):
         self.name = "Pagina_12"
         self.url = url
@@ -19,7 +19,7 @@ class InfobaeJob(Job):
         self.capture_datetime = None	# This signals not ready to commit to database
 
         self.requester = Requester(self.url, headers = self.headers, params = self.params)
-        self.scrapper = Scrapper(self.name, self.url, self.primary_key, self.capture_datetime)
+        self.scrapper = Scrapper(job_name = self.name, url = self.url)
         # XXX: does it make sense to pass primary_key & capture_datetime to Scrapper at construction time???
         # XXX: Wouldn't it be better to pass the full requester and allow Scrapper.go_scrape() full freedom
         #      regarding what to scrap as rawdata?

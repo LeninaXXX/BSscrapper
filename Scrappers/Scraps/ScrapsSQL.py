@@ -1,13 +1,13 @@
 from typing import OrderedDict
 
 class ScrapsSQL():
-    def __init__(self, job_name = None, primary_key = None, capture_datetime = None):
+    def __init__(self, job_name = None, url = None, primary_key = None, capture_datetime = None):
         # SQL DataModel
         self.SQL_row = OrderedDict({    # Explicitly OrderedDict(), even if dict() is ordered by default
             "id" : primary_key,						# PRIMARY KEY : name + timestamp @ job launch time
             "jobName" : job_name,                   # Name of the target (e.g.: La_Nacion)
             "captureDatetime" : capture_datetime,   # datetime @ job launch time
-            "url" : None,                           # ACTUAL url being scrapped 
+            "url" : url,                           # ACTUAL url being scrapped 
             
             "mainArticleTitle" : None,      		# 
             "mainArticleHref" : None,       		# relative url of main article

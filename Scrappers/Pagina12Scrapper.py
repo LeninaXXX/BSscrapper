@@ -11,5 +11,11 @@ import re
 
 class Pagina12Scrapper(Scrapper):    
     def go_scrape(self, ret):
-        # tuck away rawdata
-        self.scraps.set_rawdata(ret)
+        # First, tuck away raw data:
+        soup = bs.BeautifulSoup(ret.text, 'lxml')
+       
+        for discard_tag in ("script", "style"):
+            for t in soup.find_all(discard_tag): t.extract()
+
+        pruned_text = str(soup)
+        self.scraps.set_rawdata(ret, pruned_text)

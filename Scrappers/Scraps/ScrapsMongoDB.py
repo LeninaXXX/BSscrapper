@@ -3,14 +3,14 @@ from Scrappers.Articles import Article
 from Scrappers.Articles import MainArticle
 
 class ScrapsMongoDB():
-    def __init__(self, job_name = None, primary_key = None, capture_datetime = None):
+    def __init__(self, job_name = None, url = None, primary_key = None, capture_datetime = None):
         # MongoDB DataModel
         
         self.MongoDB_raw_doc = {            
             "id" : primary_key,
             "jobName" : job_name,
             "captureDatetime" : capture_datetime,
-            "url" : None,
+            "url" : url,
             
             "rawData" : {
                 "request_text" : None,
@@ -63,8 +63,8 @@ class ScrapsMongoDB():
         self.MongoDB_raw_doc["url"] = url
         self.MongoDB_clean_doc["url"] = url
 
-    def set_rawdata(self, ret):
-        self.MongoDB_raw_doc["rawData"]["request_text"] = ret.text
+    def set_rawdata(self, ret, pruned_text):
+        self.MongoDB_raw_doc["rawData"]["request_text"] = pruned_text
         self.MongoDB_raw_doc["rawData"]["request_reason"] = ret.reason
         self.MongoDB_raw_doc["rawData"]["request_status_code"] = ret.status_code
         self.MongoDB_raw_doc["rawData"]["request_apparent_encoding"] = ret.apparent_encoding

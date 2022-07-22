@@ -1,6 +1,5 @@
 # Job.py -- general superclass
 
-from msilib.schema import File
 import pandas as pd
 import datetime
 import time
@@ -17,10 +16,10 @@ class Job():
         self.primary_key = self.name + '_' + str(datetime.datetime.now())
         self.capture_datetime = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
-        print("Requesting...")
+        print("Requesting...", self.name)
         self.requester.go_fetch()
         
-        print("Scrapping...")
+        print("Scrapping...", self.name)
         self.scrapper.set_primary_key(self.primary_key)
         self.scrapper.set_capture_datetime(self.capture_datetime)       
         
@@ -29,11 +28,14 @@ class Job():
     def store(self):
         # from pprint import pprint   # XXX: DEBUGGING STUFF
         import json
-        with open('.test\MongoDB_raw.txt', 'w') as f:
+        with open('.test/' + self.name + '_MongoDB_raw.txt', 'a') as f:
             # print("MongoDB RawData", file = f)
             # print("---------------", file = f)
             print(json.dumps(self.scrapper.get_MongoDB_raw_scraps_as_dict(), indent=4), file = f)
         
+        # self.mongo.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', 'SCRPPRJ_' + self.name + '_rawdata')
+
+"""
         with open('.test\MongoDB_cln.txt', 'w') as f:
             # print("\nMongoDB CleanData", file = f)
             # print("-----------------", file = f)
@@ -43,6 +45,7 @@ class Job():
             # print("\nSQL Scraps", file = f)
             # print("----------", file = f)
             print(json.dumps(self.scrapper.get_SQL_scraps_as_dict(), indent=4), file = f)
+"""
 
 #        # MongoDB insertions
 #        self.mongo = MongoDB()    
