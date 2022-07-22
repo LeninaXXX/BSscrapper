@@ -12,7 +12,7 @@ class AmbitofinancieroScrapper(Scrapper):
     def go_scrape(self, ret):
         # First, tuck away raw data:
         self.scraps.set_rawdata(ret)
-
+"""
         # Dummy article to test database insertion
                 # Build some articles
                     # A MainArticle
@@ -31,3 +31,4 @@ class AmbitofinancieroScrapper(Scrapper):
         
         article_list = [article_2, article_3, article_4, article_5]
         self.scraps.append_articles(article_list)
+"""

@@ -1,5 +1,6 @@
 # Job.py -- general superclass
 
+from msilib.schema import File
 import pandas as pd
 import datetime
 import time
@@ -27,29 +28,32 @@ class Job():
 
     def store(self):
         # from pprint import pprint   # XXX: DEBUGGING STUFF
-        # with open('.test\debugdump.txt', 'w') as f:
-        #     print("MongoDB RawData", file = f)
-        #     print("---------------", file = f)
-        #     pprint(self.scrapper.get_MongoDB_raw_scraps_as_dict(), stream = f)
-        # 
-        #     print("\nMongoDB CleanData", file = f)
-        #     print("-----------------", file = f)
-        #     pprint(self.scrapper.get_MongoDB_clean_scraps_as_dict(), stream = f)
-        # 
-        #     print("\nSQL Scraps", file = f)
-        #     print("----------", file = f)
-        #     pprint(self.scrapper.get_SQL_scraps_as_dict(), stream = f)
-
-        # MongoDB insertions
-        self.mongo = MongoDB()    
-        self.mongo.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', self.name + '_rawdata')
-        self.mongo.upsertDict(self.scrapper.get_MongoDB_clean_scraps_as_dict(), 'TESTE', self.name + '_cleansed')
+        import json
+        with open('.test\MongoDB_raw.txt', 'w') as f:
+            # print("MongoDB RawData", file = f)
+            # print("---------------", file = f)
+            print(json.dumps(self.scrapper.get_MongoDB_raw_scraps_as_dict(), indent=4), file = f)
         
-        # SQL insertions
-        # given the SQL connector at hand, which take pandas's DataFrames as input, this requires some massaging
-        self.sql = SQLServer()
-        df = pd.DataFrame({k : [v] for (k, v) in self.scrapper.get_SQL_scraps_as_dict().items()})
-        self.sql.insert(df, "test_scrap")   # TODO: En esta instancia, pandas's dataframe is overkill & overhead
+        with open('.test\MongoDB_cln.txt', 'w') as f:
+            # print("\nMongoDB CleanData", file = f)
+            # print("-----------------", file = f)
+            print(json.dumps(self.scrapper.get_MongoDB_clean_scraps_as_dict(), indent=4), file = f)
+        
+        with open('.test\SQLScraps.txt', 'w') as f:
+            # print("\nSQL Scraps", file = f)
+            # print("----------", file = f)
+            print(json.dumps(self.scrapper.get_SQL_scraps_as_dict(), indent=4), file = f)
+
+#        # MongoDB insertions
+#        self.mongo = MongoDB()    
+#        self.mongo.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', self.name + '_rawdata')
+#        self.mongo.upsertDict(self.scrapper.get_MongoDB_clean_scraps_as_dict(), 'TESTE', self.name + '_cleansed')
+#        
+#        # SQL insertions
+#        # given the SQL connector at hand, which take pandas's DataFrames as input, this requires some massaging
+#        self.sql = SQLServer()
+#        df = pd.DataFrame({k : [v] for (k, v) in self.scrapper.get_SQL_scraps_as_dict().items()})
+#        self.sql.insert(df, "test_scrap")   # TODO: En esta instancia, pandas's dataframe is overkill & overhead
 
         # self.sql = SQLServer()        
         #         dd = self.scrapper.scraps.sql.as_dict()        
