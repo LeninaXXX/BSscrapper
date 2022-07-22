@@ -1,16 +1,16 @@
-# InfobaeJob.py -- subclase de Job
+# Radiomitre.py -- subclase de Job
 
 import datetime
 import time
 
 from Jobs.Job import Job
 
-from Requesters.InfobaeRequester import InfobaeRequester as Requester
-from Scrappers.InfobaeScrapper import InfobaeScrapper as Scrapper
+from Requesters.RadiomitreRequester import RadiomitreRequester as Requester
+from Scrappers.RadiomitreScrapper import RadiomitreScrapper as Scrapper
 
 class InfobaeJob(Job):
-    def __init__(self, url = "https://www.infobae.com/", headers = None, params = None):
-        self.name = "Infobae"
+    def __init__(self, url = "https://radiomitre.cienradios.com/", headers = None, params = None):
+        self.name = "Radio_Mitre"
         self.url = url
         self.headers = headers
         self.params = params

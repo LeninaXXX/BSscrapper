@@ -1,4 +1,4 @@
-# LanacionScrapper.py -- Scrapper subclass
+# ClarinScrapper.py -- Scrapper subclass
 
 from Scrappers.Scrapper import Scrapper
 from Scrappers.Scrapper import MainArticle
@@ -9,7 +9,7 @@ import bs4 as bs
 import lxml
 import re
 
-class LanacionScrapper(Scrapper):    
+class ClarinScrapper(Scrapper):    
     def go_scrape(self, ret):
         # tuck away rawdata
         self.scraps.set_rawdata(ret)

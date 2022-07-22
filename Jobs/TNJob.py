@@ -1,16 +1,16 @@
-# InfobaeJob.py -- subclase de Job
+# TNJob.py -- subclase de Job
 
 import datetime
 import time
 
 from Jobs.Job import Job
 
-from Requesters.InfobaeRequester import InfobaeRequester as Requester
-from Scrappers.InfobaeScrapper import InfobaeScrapper as Scrapper
+from Requesters.TNRequester import TNRequester as Requester
+from Scrappers.TNScrapper import TNScrapper as Scrapper
 
 class InfobaeJob(Job):
-    def __init__(self, url = "https://www.infobae.com/", headers = None, params = None):
-        self.name = "Infobae"
+    def __init__(self, url = "https://tn.com.ar", headers = None, params = None):
+        self.name = "TN"
         self.url = url
         self.headers = headers
         self.params = params

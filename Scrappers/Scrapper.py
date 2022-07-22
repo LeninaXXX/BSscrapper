@@ -272,7 +272,7 @@ class ScrapsMongoDB():
         self.MongoDB_clean_doc["url"] = url
 
     def set_rawdata(self, ret):
-        self.MongoDB_raw_doc["rawData"]["request_text"] = ret.content
+        self.MongoDB_raw_doc["rawData"]["request_text"] = ret.text
         self.MongoDB_raw_doc["rawData"]["request_reason"] = ret.reason
         self.MongoDB_raw_doc["rawData"]["request_status_code"] = ret.status_code
         self.MongoDB_raw_doc["rawData"]["request_apparent_encoding"] = ret.apparent_encoding

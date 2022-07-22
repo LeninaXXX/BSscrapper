@@ -26,19 +26,19 @@ class Job():
         self.scrapper.go_scrape(self.requester.payload())
 
     def store(self):
-        from pprint import pprint   # XXX: DEBUGGING STUFF
-        with open('.test\debugdump.txt', 'w') as f:
-            print("MongoDB RawData", file = f)
-            print("---------------", file = f)
-            pprint(self.scrapper.get_MongoDB_raw_scraps_as_dict(), stream = f)
-
-            print("\nMongoDB CleanData", file = f)
-            print("-----------------", file = f)
-            pprint(self.scrapper.get_MongoDB_clean_scraps_as_dict(), stream = f)
-
-            print("\nSQL Scraps", file = f)
-            print("----------", file = f)
-            pprint(self.scrapper.get_SQL_scraps_as_dict(), stream = f)
+        # from pprint import pprint   # XXX: DEBUGGING STUFF
+        # with open('.test\debugdump.txt', 'w') as f:
+        #     print("MongoDB RawData", file = f)
+        #     print("---------------", file = f)
+        #     pprint(self.scrapper.get_MongoDB_raw_scraps_as_dict(), stream = f)
+        # 
+        #     print("\nMongoDB CleanData", file = f)
+        #     print("-----------------", file = f)
+        #     pprint(self.scrapper.get_MongoDB_clean_scraps_as_dict(), stream = f)
+        # 
+        #     print("\nSQL Scraps", file = f)
+        #     print("----------", file = f)
+        #     pprint(self.scrapper.get_SQL_scraps_as_dict(), stream = f)
 
         # MongoDB insertions
         self.mongo = MongoDB()    

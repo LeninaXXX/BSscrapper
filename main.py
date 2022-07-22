@@ -15,12 +15,12 @@ params = cmdline.parse_args()
 
 # TODO: Logging config
 
-ambito = AmbitofinancieroJob()
-while True:
-    infobae = InfobaeJob()
-    infobae.launch()
-    infobae.store()
-    print("Taking a 5 minute nap...")
-    time.sleep(5*60)
+# 
+# while True:
+#     infobae = InfobaeJob()
+#     infobae.launch()
+#     infobae.store()
+#     print("Taking a 5 minute nap...")
+#     time.sleep(5*60)
 
-
+infobae = InfobaeJob()

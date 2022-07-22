@@ -1,8 +1,6 @@
 # LanacionRequester.py -- Requester subclass
 
-from Requesters.Requester import Requester  # make superclass visible
-
-import requests
+from Requesters.Requester import Requester
 
 class LanacionRequester(Requester):
     pass
