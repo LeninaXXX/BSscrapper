@@ -94,9 +94,9 @@ while True:
         logging.info("Storing job " + job.__class__.__name__ + '\'s collected stuff')
         job.store()
     logging.info('Taking a 2 hour nap...')
-    print('Taking a 2 hour nap...')
+    print('Taking a 1 hour nap...')
     try:
-        time.sleep(7200)
+        time.sleep(3600)
     except KeyboardInterrupt:
         print("Exiting...")
         exit(0)
