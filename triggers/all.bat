@@ -1,0 +1,1 @@
+.venv\Scripts\activate.bat && python main.py -j ambitofinanciero -j clarin -j infobae -j la100 -j lanacion -j pagina12 -j tn && exit

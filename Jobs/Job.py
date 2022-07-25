@@ -28,20 +28,21 @@ class Job():
     def store(self):
         # from pprint import pprint   # XXX: DEBUGGING STUFF
         import json
-        with open('.test/' + self.name + '_MongoDB_raw.txt', 'a') as f:
+        with open('.test/output/' + self.name + '_MongoDB_raw.txt', 'a') as f:
             # print("MongoDB RawData", file = f)
             # print("---------------", file = f)
             print(json.dumps(self.scrapper.get_MongoDB_raw_scraps_as_dict(), indent=4), file = f)
         
-        # self.mongo.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', 'SCRPPRJ_' + self.name + '_rawdata')
+        self.mongo = MongoDB()
+        self.mongo.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', 'SCRPPRJ_' + self.name + '_rawdata')
 
 """
-        with open('.test\MongoDB_cln.txt', 'w') as f:
+        with open('.test\output\MongoDB_cln.txt', 'w') as f:
             # print("\nMongoDB CleanData", file = f)
             # print("-----------------", file = f)
             print(json.dumps(self.scrapper.get_MongoDB_clean_scraps_as_dict(), indent=4), file = f)
         
-        with open('.test\SQLScraps.txt', 'w') as f:
+        with open('.test\output\SQLScraps.txt', 'w') as f:
             # print("\nSQL Scraps", file = f)
             # print("----------", file = f)
             print(json.dumps(self.scrapper.get_SQL_scraps_as_dict(), indent=4), file = f)

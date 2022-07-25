@@ -12,16 +12,19 @@ class Article():
             "slug" : slug,
             "category" : category,
             "lead" : lead,
-            "photo" : {
-                "position" : {
-                    "abs" : None,
-                    "rel" : None
-                },
-                "size" : {
-                    "abs" : None,
-                    "rel" : None
-                }
-            }
+
+            # Datamodel's 2nd Iteration
+            # TODO: Photo on hold
+            # "photo" : {
+            #     "position" : {
+            #         "abs" : None,
+            #         "rel" : None
+            #     },
+            #     "size" : {
+            #         "abs" : None,
+            #         "rel" : None
+            #     }
+            # }            
         }
 
     def set_title(self, title):
@@ -40,14 +43,14 @@ class Article():
         self.article["lead"] = lead
 
     # TODO: photo position seems like a hard inference... a placeholder for now
-    def set_photo_position(self, absolute, relative):    
-        self.article["photo"]["abs"] = None
-        self.article["photo"]["rel"] = None
+    # def set_photo_position(self, absolute, relative):    
+    #     self.article["photo"]["abs"] = None
+    #     self.article["photo"]["rel"] = None
 
     # TODO: photo size seems NOT that hard an inference... but still... a placeholder for now
-    def set_photo_size(self, absolute, relative):
-        self.article["photo"]["abs"] = None
-        self.article["photo"]["rel"] = None
+    # def set_photo_size(self, absolute, relative):
+    #     self.article["photo"]["abs"] = None
+    #     self.article["photo"]["rel"] = None
 
     def category_as_SQL_key(self):
         if self.article["category"].lower() == "economia":

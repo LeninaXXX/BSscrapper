@@ -1,0 +1,1 @@
+.venv\Scripts\activate.bat && python main.py -j la100 && exit

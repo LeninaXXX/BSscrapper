@@ -4,8 +4,8 @@ from Scrappers.Articles import MainArticle
 
 class ScrapsMongoDB():
     def __init__(self, job_name = None, url = None, primary_key = None, capture_datetime = None):
-        # MongoDB DataModel
-        
+        # MongoDB DataModel - Datamodel 2nd Iteration        
+        # Raw Data MongoDB Document Model
         self.MongoDB_raw_doc = {            
             "id" : primary_key,
             "jobName" : job_name,
@@ -19,7 +19,7 @@ class ScrapsMongoDB():
                 "request_apparent_encoding" : None
             }
         }
-
+        # Cleaned MongoDB Document Model
         self.MongoDB_clean_doc = {
             "id" : primary_key,
             "jobName" : job_name,
@@ -32,16 +32,18 @@ class ScrapsMongoDB():
                     "slug" : None,
                     "category" : None,
                     "lead" : None,
-                    "photo" : {
-                        "position" : {
-                            "abs" : None,
-                            "rel" : None
-                        },
-                        "size" : {
-                            "abs" : None,
-                            "rel" : None
-                        }
-                    }
+                    # Datamodel's 2nd Iteration
+                    # XXX: Photo on hold
+                    # "photo" : {
+                    #     "position" : {
+                    #         "abs" : None,
+                    #         "rel" : None
+                    #     },
+                    #     "size" : {
+                    #         "abs" : None,
+                    #         "rel" : None
+                    #     }
+                    # }                    
                 },
                 "articles" : []
             }
@@ -78,6 +80,20 @@ class ScrapsMongoDB():
     def append_articles(self, articles: list[Article]):
         for a in articles:
             self.add_article(a)
+
+    # Datamodel's 2nd Iteration
+    def add_annotation(self, ak, av):   # XXX : add an annotation
+        self.MongoDB_clean_doc["annotations"][ak] = av
+
+    # Datamodel's 2nd Iteration
+    def add_annotation_dict(self, d):   # XXX : add multiple annotations given a dict
+        for k in d:
+            self.add_annotation(k, d[k])
+            # self.MongoDB_clean_doc["annotations"][k] = d[k]
+
+    # Datamodel's 2nd Iteration
+    def set_debug_flag(self):     # XXX : utility function / tag a payload as debug
+        self.MongoDB_clean_doc["annotations"]["DBG"] = True
 
     def raw_as_dict(self):
         return self.MongoDB_raw_doc

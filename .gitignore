@@ -1,4 +1,6 @@
 # Mine -- Lenina's
+jupyter_notebooks/
+docs/
 .dev/
 .test/
 
