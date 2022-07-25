@@ -87,7 +87,17 @@ logging.info('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in
 logging.info("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1])
 logging.info('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1]))
 
-for job in job_list:
-    job.launch()
-    job.store()
-    
+while True:
+    for job in job_list:
+        logging.info("Launching job " + job.__class__.__name__)
+        job.launch()
+        logging.info("Storing job " + job.__class__.__name__ + '\'s collected stuff')
+        job.store()
+    logging.info('Taking a 2 hour nap...')
+    print('Taking a 2 hour nap...')
+    try:
+        time.sleep(7200)
+    except KeyboardInterrupt:
+        print("Exiting...")
+        exit(0)
+    os.system('cls')

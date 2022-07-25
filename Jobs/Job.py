@@ -3,6 +3,7 @@
 import pandas as pd
 import datetime
 import time
+import logging
 
 from Requesters.Requester import Requester
 from Scrappers.Scrapper import Scrapper
@@ -15,10 +16,12 @@ class Job():
 		# Generate PRIMARY KEY & set capture_datetime at THIS moment
         self.primary_key = self.name + '_' + str(datetime.datetime.now())
         self.capture_datetime = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
+        
+        logging.info("Requesting... " + self.name)
         print("Requesting...", self.name)
         self.requester.go_fetch()
         
+        logging.info("Scrapping... " + self.name)
         print("Scrapping...", self.name)
         self.scrapper.set_primary_key(self.primary_key)
         self.scrapper.set_capture_datetime(self.capture_datetime)       

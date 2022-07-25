@@ -21,7 +21,10 @@ class Requester():
         self.params = params
     
     def go_fetch(self):
-        self.ret = requests.get(self.url, headers = self.headers, params = self.params)
+        try:
+            self.ret = requests.get(self.url, headers = self.headers, params = self.params)
+        except:
+            self.ret = DummyExceptedReq()
         
     def payload(self):
         return self.ret
@@ -43,4 +46,10 @@ class Requester():
 		
     def payload_elapsed(self):
         return self.ret.elapsed if self.ret != None else None
-		
+
+class DummyExceptedReq():
+    def __init__(self):
+        self.text = ""
+        self.reason = "!!!EXCEPTION DURING REQUEST!!!"
+        self.status_code = None
+        self.apparent_encoding = None
