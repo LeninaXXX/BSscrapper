@@ -12,6 +12,7 @@ from Jobs.InfobaeJob import InfobaeJob
 from Jobs.La100Job import La100Job                       
 from Jobs.LanacionJob import LanacionJob
 from Jobs.Pagina12Job import Pagina12Job
+from Jobs.RadiomitreJob import RadiomitreJob
 from Jobs.TNJob import TNJob
 
 # this dict() is a jump table look-alike used to parse and any new job added to the
@@ -24,6 +25,7 @@ valid_jobs = { 'ambitofinanciero'  : AmbitofinancieroJob,
                'la100'             : La100Job,
                'lanacion'          : LanacionJob,
                'pagina12'          : Pagina12Job,
+               'radiomitre'        : RadiomitreJob, # me habia comido este job. Costo poco agregarlo (45"). Buen approach...
                'tn'                : TNJob}
 
 epilog = "Jobs disponibles: "
