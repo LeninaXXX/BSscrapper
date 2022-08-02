@@ -5,11 +5,12 @@
 import requests
 
 class Requester():
-    def __init__(self, url, headers = None, params = None):
+    def __init__(self, url, headers = None, params = None, dbg = False):
         self.url = url          
         self.headers = headers
         self.params = params
         self.ret = None
+        self.dbg = dbg
 
     def set_url(self, url):
         self.url = url

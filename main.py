@@ -35,7 +35,7 @@ epilog = epilog[:-1]
 
 # cmdline interpretation
 cmdline = argparse.ArgumentParser(description = "BSscrapper - Scrapper basado en Beautiful Soup v4", epilog = epilog)
-cmdline.add_argument("-d", action = "store_true", dest = "debug", help = "Toggle debugging mode on")
+cmdline.add_argument("-d", action = "store_false", dest = "debug", help = "Toggle debugging mode on")
 cmdline.add_argument("-j", action = "append", dest = "jobs", help = "Jobs a disparar. Uno por '-j'")
 
 params = cmdline.parse_args()
@@ -69,7 +69,7 @@ logging.basicConfig(level = logging.INFO if params.debug == False else logging,
 job_list = []
 for j in params.jobs:       # filter only valid jobs -- those strings existing as keys in valid
     if j.lower() in valid_jobs:
-        job_list.append(valid_jobs[j.lower()]())
+        job_list.append(valid_jobs[j.lower()](dbg = params.debug))  # switch debugging - False by default
         logging.info('Adding job ' + valid_jobs[j.lower()].__name__ + ' to queue')
     else:
         print('Job ' + j + ' is unknown!!!')
