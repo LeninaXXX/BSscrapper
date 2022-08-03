@@ -35,12 +35,13 @@ epilog = epilog[:-1]
 
 # cmdline interpretation
 cmdline = argparse.ArgumentParser(description = "BSscrapper - Scrapper basado en Beautiful Soup v4", epilog = epilog)
-cmdline.add_argument("-d", action = "store_true", dest = "debug", help = "Toggle debugging mode on")
+cmdline.add_argument("-dc", action = "store_true", dest = "debug_commit", help = "Toggle debugging mode on for database commits -- Database commits get tagged")
+cmdline.add_argument("-dp", action = "store_true", dest = "debug_program", help = "Toggle debugging mode on for program. Logger mode gets set to DEBUG")
 cmdline.add_argument("-j", action = "append", dest = "jobs", help = "Jobs a disparar. Uno por '-j'")
 
 params = cmdline.parse_args()
 
-if params.debug:
+if params.debug_program:
     print("cmdline:\n\t", cmdline)
     print()
     print("params:\n\t", params)
@@ -64,7 +65,7 @@ os.makedirs(logpath, exist_ok=True)                         # "os.makedirs() : R
 logfilename = logpath + "/" + d.strftime('%Y%m%d%H%M%S') +  ".log"
 print('Logging in: ' + logfilename + '\n')
 
-logging.basicConfig(level = logging.INFO if params.debug == False else logging.DEBUG,
+logging.basicConfig(level = logging.INFO if params.debug_program == False else logging.DEBUG,
                     encoding = 'utf-8',
                     filename = logfilename, 
                     format = '%(levelname)s:%(asctime)s:%(funcName)s:%(lineno)d - %(message)s',
