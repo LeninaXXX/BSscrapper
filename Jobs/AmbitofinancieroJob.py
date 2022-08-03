@@ -2,6 +2,7 @@
 
 import datetime
 import time
+import logging
 
 from Jobs.Job import Job
 
@@ -15,7 +16,8 @@ class AmbitofinancieroJob(Job):
         self.headers = headers
         self.params = params
         self.dbg = dbg          # Debugging mode -- False by default. Tags database commmits as "dbg_flag = True"
-
+        print(self.name, self.dbg)
+        
         self.primary_key = None			# This signals not ready to commit to database
         self.capture_datetime = None	# This signals not ready to commit to database
 

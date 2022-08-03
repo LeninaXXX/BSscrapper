@@ -17,7 +17,7 @@ class LanacionScrapper(Scrapper):
         beg_size = len(str(soup))
        
         for discard_tag in ("script", "style"):
-            for t in soup.find_all(discard_tag): t.extract()
+            for t in soup.find_all(discard_tag): t.decompose()
 
         pruned_text = str(soup)
         end_size = len(pruned_text)

@@ -1,7 +1,7 @@
 from typing import OrderedDict
 
 class ScrapsSQL():
-    def __init__(self, job_name = None, url = None, primary_key = None, capture_datetime = None):
+    def __init__(self, job_name = None, url = None, primary_key = None, capture_datetime = None, dbg = False):
         # SQL DataModel
         self.SQL_row = OrderedDict({    # Explicitly OrderedDict(), even if dict() is ordered by default
             "id" : primary_key,						# PRIMARY KEY : name + timestamp @ job launch time
@@ -21,7 +21,12 @@ class ScrapsSQL():
             "nPolice" : 0,                  		# ... police
             "nOthers" : 0                   		# number on a category not known in advance
         })
+        if dbg:     # if called in debug mode, tag database commit
+            self.set_debug_flag()
 
+    def set_debug_flag(self):
+        self.SQL_row["DBG_FLAG"] = True
+    
     def set_primary_key(self, primary_key):
         self.SQL_row["id"] = primary_key
     def set_capture_datetime(self, capture_datetime):

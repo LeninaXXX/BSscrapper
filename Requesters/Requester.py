@@ -3,6 +3,7 @@
 # this module should only be visible to Job.py, that is, to class Job and its subclasses <target>Job
 
 import requests
+import logging
 
 class Requester():
     def __init__(self, url, headers = None, params = None, dbg = False):
@@ -11,6 +12,7 @@ class Requester():
         self.params = params
         self.ret = None
         self.dbg = dbg
+        print("Requester :", self.dbg)
 
     def set_url(self, url):
         self.url = url
@@ -25,7 +27,11 @@ class Requester():
         try:
             self.ret = requests.get(self.url, headers = self.headers, params = self.params)
         except:
-            self.ret = DummyExceptedReq()
+            logging.critical("Something went wrong when trying to fetch: " + self.url)
+            logging.critical("------------------------------------------")
+            logging.critical(str(self.ret))
+            logging.critical("------------------------------------------")
+            self.ret = DummyExceptedReq()   # TODO: This should be replaced by proper exception propagation
         
     def payload(self):
         return self.ret

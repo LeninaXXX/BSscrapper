@@ -3,14 +3,26 @@ from Scrappers.Articles import Article
 from Scrappers.Articles import MainArticle
 
 class ScrapsMongoDB():
-    def __init__(self, job_name = None, url = None, primary_key = None, capture_datetime = None):
+    def __init__(self, job_name = None, url = None, primary_key = None, capture_datetime = None, dbg = False):
+        # DataModel Version Information
+        self.datamodel_version = 1
+        self.datamodel_revision = 0
+        self.datamodel_iteration = "%s.%02s" % (str(self.datamodel_version), str(self.datamodel_revision))
+
+        self.job_name = job_name
+        self.url = url
+        self.primary_key = primary_key
+        self.capture_datetime = capture_datetime
+        self.dbg = dbg
+
         # MongoDB DataModel - Datamodel 2nd Iteration        
         # Raw Data MongoDB Document Model
         self.MongoDB_raw_doc = {            
-            "id" : primary_key,
-            "jobName" : job_name,
-            "captureDatetime" : capture_datetime,
-            "url" : url,
+            "id" : self.primary_key,
+            "datamodel_version" : self.datamodel_iteration,
+            "jobName" : self.job_name,
+            "captureDatetime" : self.capture_datetime,
+            "url" : self.url,
             
             "rawData" : {
                 "request_text" : None,
@@ -21,10 +33,11 @@ class ScrapsMongoDB():
         }
         # Cleaned MongoDB Document Model
         self.MongoDB_clean_doc = {
-            "id" : primary_key,
-            "jobName" : job_name,
-            "captureDatetime" : capture_datetime,
-            "url" : None,
+            "id" : self.primary_key,
+            "datamodel_version" : self.datamodel_iteration,
+            "jobName" : self.job_name,
+            "captureDatetime" : self.capture_datetime,
+            "url" : self.url,
 
             "annotations" : {
                 "main_article" : {
@@ -48,7 +61,13 @@ class ScrapsMongoDB():
                 "articles" : []
             }
         }
-        
+        if self.dbg:     # if called in debug mode, tag database commit
+            self.set_debug_flag()
+
+    def set_debug_flag(self):
+        self.MongoDB_raw_doc["DBG_FLAG"] = True
+        self.MongoDB_clean_doc["DBG_FLAG"] = True
+
     def set_primary_key(self, primary_key):
         self.MongoDB_raw_doc["id"] = primary_key
         self.MongoDB_clean_doc["id"] = primary_key
@@ -91,11 +110,8 @@ class ScrapsMongoDB():
             self.add_annotation(k, d[k])
             # self.MongoDB_clean_doc["annotations"][k] = d[k]
 
-    # Datamodel's 2nd Iteration
-    def set_debug_flag(self):     # XXX : utility function / tag a payload as debug
-        self.MongoDB_clean_doc["annotations"]["DBG"] = True
-
     def raw_as_dict(self):
         return self.MongoDB_raw_doc
+    
     def clean_as_dict(self):
         return self.MongoDB_clean_doc

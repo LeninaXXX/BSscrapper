@@ -29,32 +29,32 @@ class Job():
         self.scrapper.go_scrape(self.requester.payload())
 
     def store(self):
-        # from pprint import pprint   # XXX: DEBUGGING STUFF
-        import json
-        with open('.test/output/' + self.name + '_MongoDB_raw.txt', 'a') as f:
-            # print("MongoDB RawData", file = f)
-            # print("---------------", file = f)
-            print(json.dumps(self.scrapper.get_MongoDB_raw_scraps_as_dict(), indent=4), file = f)
-        
-        self.mongo = MongoDB()
-        self.mongo.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', 'SCRPPRJ_' + self.name + '_rawdata')
+        if self.dbg:        # if in debug mode, dump beautified version to a file for inspection
+            import json
+            with open('.test/output/' + self.name + '_MongoDB_raw.debug.txt', 'a') as f:
+                print(json.dumps(self.scrapper.get_MongoDB_raw_scraps_as_dict(), indent=4), file = f)
+        else:            
+            import json
+            with open('.test/output/' + self.name + '_MongoDB_raw.txt', 'a') as f:
+                print(json.dumps(self.scrapper.get_MongoDB_raw_scraps_as_dict(), indent=4), file = f)
+       
+        # self.mongo_connection = MongoDB()
+        # self.mongo_connection.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', 'SCRPPRJ_' + self.name + '_rawdata')
 
-"""
-        with open('.test\output\MongoDB_cln.txt', 'w') as f:
-            # print("\nMongoDB CleanData", file = f)
-            # print("-----------------", file = f)
-            print(json.dumps(self.scrapper.get_MongoDB_clean_scraps_as_dict(), indent=4), file = f)
-        
-        with open('.test\output\SQLScraps.txt', 'w') as f:
-            # print("\nSQL Scraps", file = f)
-            # print("----------", file = f)
-            print(json.dumps(self.scrapper.get_SQL_scraps_as_dict(), indent=4), file = f)
-"""
+#        with open('.test\output\MongoDB_cln.txt', 'w') as f:
+#            # print("\nMongoDB CleanData", file = f)
+#            # print("-----------------", file = f)
+#            print(json.dumps(self.scrapper.get_MongoDB_clean_scraps_as_dict(), indent=4), file = f)
+#        
+#        with open('.test\output\SQLScraps.txt', 'w') as f:
+#            # print("\nSQL Scraps", file = f)
+#            # print("----------", file = f)
+#            print(json.dumps(self.scrapper.get_SQL_scraps_as_dict(), indent=4), file = f)
 
 #        # MongoDB insertions
-#        self.mongo = MongoDB()    
-#        self.mongo.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', self.name + '_rawdata')
-#        self.mongo.upsertDict(self.scrapper.get_MongoDB_clean_scraps_as_dict(), 'TESTE', self.name + '_cleansed')
+#        self.mongo_connection = MongoDB()    
+#        self.mongo_connection.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', self.name + '_rawdata')
+#        self.mongo_connection.upsertDict(self.scrapper.get_MongoDB_clean_scraps_as_dict(), 'TESTE', self.name + '_cleansed')
 #        
 #        # SQL insertions
 #        # given the SQL connector at hand, which take pandas's DataFrames as input, this requires some massaging

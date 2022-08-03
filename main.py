@@ -35,10 +35,15 @@ epilog = epilog[:-1]
 
 # cmdline interpretation
 cmdline = argparse.ArgumentParser(description = "BSscrapper - Scrapper basado en Beautiful Soup v4", epilog = epilog)
-cmdline.add_argument("-d", action = "store_false", dest = "debug", help = "Toggle debugging mode on")
+cmdline.add_argument("-d", action = "store_true", dest = "debug", help = "Toggle debugging mode on")
 cmdline.add_argument("-j", action = "append", dest = "jobs", help = "Jobs a disparar. Uno por '-j'")
 
 params = cmdline.parse_args()
+
+if params.debug:
+    print("cmdline:\n\t", cmdline)
+    print()
+    print("params:\n\t", params)
 
 if not params.jobs:
     print("Nada para hacer...")
@@ -59,7 +64,7 @@ os.makedirs(logpath, exist_ok=True)                         # "os.makedirs() : R
 logfilename = logpath + "/" + d.strftime('%Y%m%d%H%M%S') +  ".log"
 print('Logging in: ' + logfilename + '\n')
 
-logging.basicConfig(level = logging.INFO if params.debug == False else logging,
+logging.basicConfig(level = logging.INFO if params.debug == False else logging.DEBUG,
                     encoding = 'utf-8',
                     filename = logfilename, 
                     format = '%(levelname)s:%(asctime)s:%(funcName)s:%(lineno)d - %(message)s',
@@ -69,7 +74,7 @@ logging.basicConfig(level = logging.INFO if params.debug == False else logging,
 job_list = []
 for j in params.jobs:       # filter only valid jobs -- those strings existing as keys in valid
     if j.lower() in valid_jobs:
-        job_list.append(valid_jobs[j.lower()](dbg = params.debug))  # switch debugging - False by default
+        job_list.append(valid_jobs[j.lower()](dbg = params.debug))  # switch debugging by passing flag to constructors in the queue - False by default
         logging.info('Adding job ' + valid_jobs[j.lower()].__name__ + ' to queue')
     else:
         print('Job ' + j + ' is unknown!!!')
@@ -87,6 +92,12 @@ logging.info('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in
 logging.info("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1])
 logging.info('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1]))
 
+for job in job_list:
+    logging.info("Launching job " + job.__class__.__name__)
+    job.launch()
+    logging.info("Storing job " + job.__class__.__name__ + '\'s collected stuff')
+    job.store()
+
 # while True:
 #     for job in job_list:
 #         logging.info("Launching job " + job.__class__.__name__)
@@ -101,9 +112,3 @@ logging.info('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in
 #         print("Exiting...")
 #         exit(0)
 #     os.system('cls')
-
-for job in job_list:
-    logging.info("Launching job " + job.__class__.__name__)
-    job.launch()
-    logging.info("Storing job " + job.__class__.__name__ + '\'s collected stuff')
-    job.store()

@@ -17,11 +17,11 @@ class AmbitofinancieroScrapper(Scrapper):
         beg_size = len(str(soup))
        
         for discard_tag in ("script", "style"):
-            for t in soup.find_all(discard_tag): t.extract()
+            for t in soup.find_all(discard_tag): t.decompose()
 
+        # output some statistics regarding pruning
         pruned_text = str(soup)
         end_size = len(pruned_text)
-
         print(self.name + " | end_size :: ", end_size)
         logging.info(self.name + " | end_size :: " + str(end_size))
         print(self.name + " | beg_size :: ", beg_size)
@@ -33,6 +33,7 @@ class AmbitofinancieroScrapper(Scrapper):
             print('ZeroDivisionError Exception -- Presume empty request or request failure')
             logging.error('ZeroDivisionError Exception -- Presume empty request or request failure')
         print('-' * 60)
+        
         self.scraps.set_rawdata(ret, pruned_text)
 
 

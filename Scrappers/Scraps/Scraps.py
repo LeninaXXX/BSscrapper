@@ -4,18 +4,24 @@ from Scrappers.Scraps.ScrapsSQL import ScrapsSQL
 from Scrappers.Scraps.ScrapsMongoDB import ScrapsMongoDB
 
 class Scraps():
-    def __init__(self, job_name = None, url = None, primary_key = None, capture_datetime = None):
+    def __init__(self, job_name = None, url = None, primary_key = None, capture_datetime = None, dbg = False):
         # init SQL scraps
         self.scraps_SQL = ScrapsSQL(job_name = job_name, 
                                     url = url, 
-							        primary_key = primary_key, 
-							        capture_datetime = capture_datetime)
+							        primary_key = primary_key,
+							        capture_datetime = capture_datetime,
+                                    dbg = dbg)
         # init MongoDB scraps
         self.scraps_MongoDB = ScrapsMongoDB(job_name = job_name, 
 									        url = url,
                                             primary_key = primary_key, 
-									        capture_datetime = capture_datetime)
-
+									        capture_datetime = capture_datetime,
+                                            dbg = dbg)
+            
+    def set_debug_flag(self ):               # Instead of manually flipping it on, it's propagated from constructor to
+        self.scraps_SQL.set_debug_flag()     # constructor scraps constructors inherit the concern of tagging db commits.
+        self.scraps_MongoDB.set_debug_flag() # Left it as an utility function just in case. Not actually used
+                                                    
     def set_primary_key(self, primary_key):
         self.scraps_SQL.set_primary_key(primary_key)
         self.scraps_MongoDB.set_primary_key(primary_key)

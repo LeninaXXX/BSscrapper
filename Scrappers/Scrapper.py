@@ -9,15 +9,21 @@ from Scrappers.Scraps.Scraps import Scraps
 class Scrapper():
     # job_name & url : need to be known at build time
     # primary_key & capture_datetime : generated only at launchtime
-    def __init__(self, job_name, url, primary_key = None, capture_datetime = None):
+    def __init__(self, job_name, url, primary_key = None, capture_datetime = None, dbg = False):
         self.name = job_name
         self.url = url
+        self.primary_key = primary_key
+        self.capture_datetime = capture_datetime
+        self.dbg = dbg
+        print("Scrapper :", self.name, self.dbg)
 
-        self.scraps = Scraps(job_name = job_name,
-                             url = url, 
-							 primary_key = primary_key, 		# at this point, primary_key nor capture_datetime are set.
-							 capture_datetime = capture_datetime)	# at this point, primary_key nor capture_datetime are set.
-																# it's done at job.launch() time
+        self.scraps = Scraps(job_name = self.name,
+                             url = self.url, 
+							 primary_key = self.primary_key, 		    # at this point, primary_key nor capture_datetime are set.
+							 capture_datetime = self.capture_datetime,
+                             dbg = self.dbg
+                            )	# at this point, primary_key nor capture_datetime are set.
+																    # it's done at job.launch() time
         # self.scraps.set_url(url)
         # FIXED: Check for fix -- url should be set at build time
 
