@@ -38,19 +38,19 @@ class Job():
             with open('.test/output/' + self.name + '_MongoDB_raw.txt', 'a') as f:
                 print(json.dumps(self.scrapper.get_MongoDB_raw_scraps_as_dict(), indent=4), file = f)
         
+        # TODO: This should preclude further execution of the job, and should
+        #   raise a user-defined exception tailored to manage such condition
         try:
             self.mongo_connection = MongoDB()
         except:
             logging.critical("Failed to connect to MongoDB DataBase")
-            # TODO: This should preclude further execution of the job, and should
-            #   raise a user-defined exception tailored to manage such condition
         
+        # TODO: This should preclude further execution of the job, and should
+        #   raise a user-defined exception tailored to manage such condition
         try:
             self.mongo_connection.upsertDict(self.scrapper.get_MongoDB_raw_scraps_as_dict(), 'TESTE', 'SCRPPRJ_' + self.name + '_rawdata')
         except:
             logging.critical("Failed to commit to Mongo DB")
-            # TODO: This should preclude further execution of the job, and should
-            #   raise a user-defined exception tailored to manage such condition
 
 #        with open('.test\output\MongoDB_cln.txt', 'w') as f:
 #            # print("\nMongoDB CleanData", file = f)
