@@ -54,9 +54,11 @@ class Requester():
     def payload_elapsed(self):
         return self.ret.elapsed if self.ret != None else None
 
-class DummyExceptedReq():
+class DummyExceptedReq():       # FIXME: this kruft is fucking disgusting
     def __init__(self):
-        self.text = ""
+        self.text = None
         self.reason = "!!!EXCEPTION DURING REQUEST!!!"
         self.status_code = None
+        self.elapsed = None             # Datamodel 2nd Iteration
+        self.encoding = None            # Datamodel 2nd Iteration
         self.apparent_encoding = None

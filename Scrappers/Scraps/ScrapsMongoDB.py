@@ -23,11 +23,18 @@ class ScrapsMongoDB():
             "jobName" : self.job_name,
             "captureDatetime" : self.capture_datetime,
             "url" : self.url,
-            
+                       
+            "rawData_metadata" : {  # TODO: Access methods addition pending...
+                "bef_prunning" : None,  # Size before prunning <style> & <script>
+                "aft_prunning" : None,  # Size after prunning <style> & <script>
+            },
+
             "rawData" : {
                 "request_text" : None,
                 "request_reason" : None,
-                "request_status_code" : None,
+                "request_status_code" : None,                   
+                "request_elapsed" : None,           # Datamodel 2nd Iteration ... maybe as a measure of availability
+                "request_encoding" : None,          # Datamodel 2nd Iteration
                 "request_apparent_encoding" : None
             }
         }
@@ -38,6 +45,16 @@ class ScrapsMongoDB():
             "jobName" : self.job_name,
             "captureDatetime" : self.capture_datetime,
             "url" : self.url,
+
+            "level-0" : {
+                "head-size" : None,
+                "body-size" : None,
+                "title" : None,
+                "meta-tags" : [],
+                "link-tags" : []
+            },
+
+            "level-1" : {},
 
             "annotations" : {
                 "main_article" : {
@@ -85,10 +102,14 @@ class ScrapsMongoDB():
         self.MongoDB_clean_doc["url"] = url
 
     def set_rawdata(self, ret, pruned_text):
+        # version 0
         self.MongoDB_raw_doc["rawData"]["request_text"] = pruned_text
         self.MongoDB_raw_doc["rawData"]["request_reason"] = ret.reason
         self.MongoDB_raw_doc["rawData"]["request_status_code"] = ret.status_code
+        self.MongoDB_raw_doc["rawData"]["request_elapsed"] = ret.elapsed                        # Datamodel 2nd Iteration TODO: reflect it in DummyException ... or prescind of it altogether
+        self.MongoDB_raw_doc["rawData"]["request_encoding"] = ret.encoding                      # Datamodel 2nd Iteration TODO: reflect it in DummyException ... or prescind of it altogether
         self.MongoDB_raw_doc["rawData"]["request_apparent_encoding"] = ret.apparent_encoding
+        # version
     
     def add_main_article(self, main_article: MainArticle):
         self.MongoDB_clean_doc["annotations"]["main_article"] = main_article.as_dict()

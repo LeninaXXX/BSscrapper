@@ -6,6 +6,7 @@ import logging      # TODO: logging pendiente
 import time
 from datetime import datetime
 
+# list of available jobs
 from Jobs.AmbitofinancieroJob import AmbitofinancieroJob
 from Jobs.ClarinJob import ClarinJob
 from Jobs.InfobaeJob import InfobaeJob                       
@@ -75,41 +76,32 @@ logging.basicConfig(level = logging.INFO if params.debug_program == False else l
 job_list = []
 for j in params.jobs:       # filter only valid jobs -- those strings existing as keys in valid
     if j.lower() in valid_jobs:
-        job_list.append(valid_jobs[j.lower()](dbg = params.debug))  # switch debugging by passing flag to constructors in the queue - False by default
+        job_list.append(valid_jobs[j.lower()](dbg = params.debug_program))  # switch debugging by passing flag to constructors in the queue - False by default
         logging.info('Adding job ' + valid_jobs[j.lower()].__name__ + ' to queue')
     else:
         print('Job ' + j + ' is unknown!!!')
         logging.warning('Job ' + j + ' is unknown!!!')
 
 if job_list == []:
-    print("Ninguno de los trabajos especificados es reconocido"); 
     logging.error("Ninguno de los trabajos especificados es reconocido")
-    print("Nada para hacer..."); 
     logging.error("Nada para hacer...")
+    print("Ninguno de los trabajos especificados es reconocido")
+    print("Nada para hacer..."); 
     print(cmdline.prog, "-h para ver opciones y jobs disponibles")
     exit(0)
 
 logging.info('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1]))
 logging.info("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1])
 logging.info('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1]))
+print('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1]))
+print("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1])
+print('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1]))
 
 for job in job_list:
     logging.info("Launching job " + job.__class__.__name__)
+    print("Launching job " + job.__class__.__name__)
     job.launch()
     logging.info("Storing job " + job.__class__.__name__ + '\'s collected stuff')
+    print("Storing job " + job.__class__.__name__ + '\'s collected stuff')
     job.store()
 
-# while True:
-#     for job in job_list:
-#         logging.info("Launching job " + job.__class__.__name__)
-#         job.launch()
-#         logging.info("Storing job " + job.__class__.__name__ + '\'s collected stuff')
-#         job.store()
-#     logging.info('Taking a 2 hour nap...')
-#     print('Taking a 1 hour nap...')
-#     try:
-#         time.sleep(3600)
-#     except KeyboardInterrupt:
-#         print("Exiting...")
-#         exit(0)
-#     os.system('cls')
