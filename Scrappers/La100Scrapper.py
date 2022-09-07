@@ -22,13 +22,13 @@ class La100Scrapper(Scrapper):
         pruned_text = str(soup)
         end_size = len(pruned_text)
 
-        print(self.name + " | end_size :: ", end_size)
-        logging.info(self.name + " | end_size :: " + str(end_size))
-        print(self.name + " | beg_size :: ", beg_size)
-        logging.info(self.name + " | beg_size :: " + str(beg_size))
+        print(self.job_name + " | end_size :: ", end_size)
+        logging.info(self.job_name + " | end_size :: " + str(end_size))
+        print(self.job_name + " | beg_size :: ", beg_size)
+        logging.info(self.job_name + " | beg_size :: " + str(beg_size))
         try:
-            print(self.name + " | % saving :: ", (beg_size - end_size)/beg_size * 100)
-            logging.info(self.name + " | % saving :: " + str((beg_size - end_size)/beg_size * 100))
+            print(self.job_name + " | % saving :: ", (beg_size - end_size)/beg_size * 100)
+            logging.info(self.job_name + " | % saving :: " + str((beg_size - end_size)/beg_size * 100))
         except ZeroDivisionError:
             print('ZeroDivisionError Exception -- Presume empty request or request failure')
             logging.error('ZeroDivisionError Exception -- Presume empty request or request failure')

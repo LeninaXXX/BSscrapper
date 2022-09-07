@@ -15,6 +15,7 @@ from Jobs.LanacionJob import LanacionJob
 from Jobs.Pagina12Job import Pagina12Job
 from Jobs.RadiomitreJob import RadiomitreJob
 from Jobs.TNJob import TNJob
+from Jobs.DatabaseTestJob import DatabaseTestJob
 
 # this dict() is a jump table look-alike used to parse and any new job added to the
 # script should be added in here for the command line parser to know what to do.
@@ -27,7 +28,8 @@ valid_jobs = { 'ambitofinanciero'  : AmbitofinancieroJob,
                'lanacion'          : LanacionJob,
                'pagina12'          : Pagina12Job,
                'radiomitre'        : RadiomitreJob, # me habia comido este job. Costo poco agregarlo (45"). Buen approach...
-               'tn'                : TNJob}
+               'tn'                : TNJob,
+               'databasetest'      : DatabaseTestJob}
 
 epilog = "Jobs disponibles: "
 for j in valid_jobs: 
@@ -38,6 +40,7 @@ epilog = epilog[:-1]
 cmdline = argparse.ArgumentParser(description = "BSscrapper - Scrapper basado en Beautiful Soup v4", epilog = epilog)
 cmdline.add_argument("-dc", action = "store_true", dest = "debug_commit", help = "Toggle debugging mode on for database commits -- Database commits get tagged")
 cmdline.add_argument("-dp", action = "store_true", dest = "debug_program", help = "Toggle debugging mode on for program. Logger mode gets set to DEBUG")
+cmdline.add_argument("-f", action = "store_true", dest = "file_commit", help = "Commit result of scrapping to file, not to database. Here for debugging purposes")
 cmdline.add_argument("-j", action = "append", dest = "jobs", help = "Jobs a disparar. Uno por '-j'")
 
 params = cmdline.parse_args()
@@ -76,7 +79,9 @@ logging.basicConfig(level = logging.INFO if params.debug_program == False else l
 job_list = []
 for j in params.jobs:       # filter only valid jobs -- those strings existing as keys in valid
     if j.lower() in valid_jobs:
-        job_list.append(valid_jobs[j.lower()](dbg = params.debug_program))  # switch debugging by passing flag to constructors in the queue - False by default
+        job_list.append(valid_jobs[j.lower()](dbg = params.debug_commit))  # switch debug & file_commit flags. False by defaults
+        if params.debug_program:
+            logging.info("Database commits to be flagged as debug")
         logging.info('Adding job ' + valid_jobs[j.lower()].__name__ + ' to queue')
     else:
         print('Job ' + j + ' is unknown!!!')
@@ -103,5 +108,5 @@ for job in job_list:
     job.launch()
     logging.info("Storing job " + job.__class__.__name__ + '\'s collected stuff')
     print("Storing job " + job.__class__.__name__ + '\'s collected stuff')
-    job.store()
+    job.store(params.file_commit)
 
