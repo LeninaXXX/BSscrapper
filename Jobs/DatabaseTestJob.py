@@ -1,4 +1,12 @@
 # DatabaseTestJob.py -- Testing over the database
+# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
+# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
+# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
+# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
+# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
+# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
+# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
+# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
 
 from pprint import pprint
 import logging
@@ -6,8 +14,8 @@ import logging
 from Jobs.Job import Job
 from db_connectors.MongoDB.MongoDB import MongoDB
 
-    # from Requesters.TNRequester import TNRequester as Requester
-    # from Scrappers.TNScrapper import TNScrapper as Scrapper
+# from Requesters.TNRequester import TNRequester as Requester
+# from Scrappers.TNScrapper import TNScrapper as Scrapper
 
 class DatabaseTestJob(Job):
     def __init__(self, url = "https://tn.com.ar", headers = None, params = None, dbg = False):
@@ -31,3 +39,4 @@ class DatabaseTestJob(Job):
         with open('.test/mongodb_dump_file.txt', 'w') as f:
                 for doc in self.dbcursor:
                     pprint(doc, stream = f)
+
