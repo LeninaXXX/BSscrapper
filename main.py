@@ -16,7 +16,9 @@ from Jobs.LanacionJob import LanacionJob
 from Jobs.Pagina12Job import Pagina12Job
 from Jobs.RadiomitreJob import RadiomitreJob
 from Jobs.TNJob import TNJob
+
 from Jobs.DatabaseTestJob import DatabaseTestJob
+from Jobs.ClarinReprocessJob import ClarinReprocessJob
 
 # this dict() is a jump table look-alike used to parse and any new job added to the
 # script should be added in here for the command line parser to know what to do.
@@ -30,7 +32,8 @@ valid_jobs = { 'ambitofinanciero'  : AmbitofinancieroJob,
                'pagina12'          : Pagina12Job,
                'radiomitre'        : RadiomitreJob, # me habia comido este job. Costo poco agregarlo (45"). Buen approach...
                'tn'                : TNJob,
-               'databasetest'      : DatabaseTestJob,
+               'databasetest'      : DatabaseTestJob, 
+               'clarinreprocess'   : ClarinReprocessJob,
                }
 
 epilog = "Jobs disponibles:"
