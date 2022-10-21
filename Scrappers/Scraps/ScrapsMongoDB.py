@@ -7,7 +7,7 @@ class ScrapsMongoDB():
         # DataModel Version Information
         self.datamodel_version = 1
         self.datamodel_revision = 0
-        self.datamodel_iteration = "%s.%02s" % (str(self.datamodel_version), str(self.datamodel_revision))
+        self.datamodel_iteration = "%d.%02d" % (self.datamodel_version, self.datamodel_revision)
 
         self.job_name = job_name
         self.url = url
@@ -47,36 +47,50 @@ class ScrapsMongoDB():
             "url" : self.url,
 
             "level-0" : {
-                "head-size" : None,
-                "body-size" : None,
-                "title" : None,
-                "meta-tags" : [],
-                "link-tags" : []
+                "head-size"         : None,
+                "body-size"         : None,
+                "title"             : None,
+                "meta-tags"         : [],
+                "link-tags"         : [],
+                "n-meta-tags"       : None,
+                "n-link-tags"       : None,
+                "n-h1-tags"         : None, 
+                "n-h2-tags"         : None, 
+                "n-h3-tags"         : None, 
+                "n-h4-tags"         : None, 
+                "n-h5-tags"         : None, 
+                "n-h6-tags"         : None,
+                "n-section-tags"    : None,
+                "n-article-tags"    : None,
+                "n-header-tags"     : None,
+                "n-footer-tags"     : None,
             },
 
-            "level-1" : {},
-
-            "annotations" : {
-                "main_article" : {
-                    "title" : None,
-                    "slug" : None,
-                    "category" : None,
-                    "lead" : None,
-                    # Datamodel's 2nd Iteration
-                    # XXX: Photo on hold
-                    # "photo" : {
-                    #     "position" : {
-                    #         "abs" : None,
-                    #         "rel" : None
-                    #     },
-                    #     "size" : {
-                    #         "abs" : None,
-                    #         "rel" : None
-                    #     }
-                    # }                    
-                },
-                "articles" : []
-            }
+            # "level-1" : {
+            #     "h1s-text/links"
+            # },
+            # 
+            # "annotations" : {
+            #     "main_article" : {
+            #         "title" : None,
+            #         "slug" : None,
+            #         "category" : None,
+            #         "lead" : None,
+            #         # Datamodel's 2nd Iteration
+            #         # XXX: Photo on hold
+            #         # "photo" : {
+            #         #     "position" : {
+            #         #         "abs" : None,
+            #         #         "rel" : None
+            #         #     },
+            #         #     "size" : {
+            #         #         "abs" : None,
+            #         #         "rel" : None
+            #         #     }
+            #         # }                    
+            #     },
+            #     "articles" : []
+            # }
         }
         if self.dbg:     # if called in debug mode, tag database commit
             self.set_debug_flag()
@@ -106,7 +120,8 @@ class ScrapsMongoDB():
         self.MongoDB_raw_doc["rawData"]["request_text"] = pruned_text
         self.MongoDB_raw_doc["rawData"]["request_reason"] = ret.reason
         self.MongoDB_raw_doc["rawData"]["request_status_code"] = ret.status_code
-        self.MongoDB_raw_doc["rawData"]["request_elapsed"] = ret.elapsed                        # Datamodel 2nd Iteration TODO: reflect it in DummyException ... or prescind of it altogether
+        self.MongoDB_raw_doc["rawData"]["request_elapsed_repr"] = repr(ret.elapsed)                        # Datamodel 2nd Iteration TODO: reflect it in DummyException ... or prescind of it altogether
+        self.MongoDB_raw_doc["rawData"]["request_elapsed_str"] = str(ret.elapsed)                        # Datamodel 2nd Iteration TODO: reflect it in DummyException ... or prescind of it altogether
         self.MongoDB_raw_doc["rawData"]["request_encoding"] = ret.encoding                      # Datamodel 2nd Iteration TODO: reflect it in DummyException ... or prescind of it altogether
         self.MongoDB_raw_doc["rawData"]["request_apparent_encoding"] = ret.apparent_encoding
         # version
@@ -122,8 +137,8 @@ class ScrapsMongoDB():
             self.add_article(a)
 
     # Datamodel's 2nd Iteration
-    def add_annotation(self, ak, av):   # XXX : add an annotation
-        self.MongoDB_clean_doc["annotations"][ak] = av
+    def add_annotation(self, annotation_key, annotation_val):       # XXX : add an annotation
+        self.MongoDB_clean_doc["annotations"][annotation_key] = annotation_val
 
     # Datamodel's 2nd Iteration
     def add_annotation_dict(self, d):   # XXX : add multiple annotations given a dict
@@ -136,3 +151,9 @@ class ScrapsMongoDB():
     
     def clean_as_dict(self):
         return self.MongoDB_clean_doc
+#
+    def doc_level0(self):
+        return self.MongoDB_clean_doc["level-0"]
+    
+    def doc_level1(self):
+        return self.MongoDB_clean_doc["level-1"]

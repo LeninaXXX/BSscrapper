@@ -19,16 +19,15 @@ class MongoDB(Database):
 
         # Recorrer las filas del dataframe y guardar en la base de datos
         lista = {}
-        for i,r in df.iterrows():
+        for _, r in df.iterrows():
             for key in df.keys():
                 lista[key] = r[key]
             id = lista.pop('id')
-            collection.update_one({"_id" : id}, {"$set": lista}, upsert=True)
+            collection.update_one({"_id" : id}, {"$set" : lista}, upsert = True)
 
     def upsertDict(self, data: dict, base, collection):
         aDict = dict(data)
         
-        # 
         db = self.client[base]
         collection = db[collection]
         
@@ -43,6 +42,7 @@ class MongoDB(Database):
         except Exception as e:
             logging.error('Failed to upload a dict')
             logging.error(aDict)
+            logging.error('Exception: ', exc_info = e)
 
     def read_all_as_cursor(self, database, collection):
         "Returns a cursor over an entire collection"

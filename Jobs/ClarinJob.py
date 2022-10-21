@@ -17,8 +17,8 @@ class ClarinJob(Job):
         self.params = params
         self.dbg = dbg                  # Debugging mode -- False by default. Tags database commmits as "dbg_flag = True"
 
-        self.primary_key = None			# This signals not ready to commit to database
-        self.capture_datetime = None	# This signals not ready to commit to database
+        self.primary_key = None			                # This signals not ready to commit to database
+        self.capture_datetime = datetime.datetime.now()	# This signals not ready to commit to database
 
         self.requester = Requester(job_name = self.job_name, url = self.url, headers = self.headers, params = self.params, dbg = self.dbg)
         self.scrapper = Scrapper(job_name = self.job_name, url = self.url, dbg = self.dbg)

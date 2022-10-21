@@ -13,15 +13,18 @@ class Requester():
         self.params = params
         self.ret = None
         self.dbg = dbg
-        print("Requester :", self.dbg)
+        print("Requester :", self.job_name, "/ debug_commit :", self.dbg)
 
-    def set_url(self, url):
+    def set_job_name(self, job_name):
+        self.job_name = job_name
+
+    def set_url(self, url):         # same as setting url when constructing
         self.url = url
     
-    def set_header(self, header):
+    def set_header(self, header):   # same as setting headers when constructing
         self.header = header
         
-    def set_params(self, params):
+    def set_params(self, params):   # same as setting params when constructing
         self.params = params
     
     def go_fetch(self):

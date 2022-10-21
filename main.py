@@ -1,16 +1,8 @@
 # main.py -- main 
-# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
-# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
-# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
-# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
-# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
-# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
-# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
-# TODO: Keep in mind this file has been altered... and I don't even know where the fuck!!! :@
 
 import argparse
 import os
-import logging      # TODO: logging pendiente
+import logging
 
 from collections import namedtuple
 from datetime import datetime
@@ -41,13 +33,13 @@ valid_jobs = { 'ambitofinanciero'  : AmbitofinancieroJob,
                'databasetest'      : DatabaseTestJob,
                }
 
-epilog = "Jobs disponibles: "
+epilog = "Jobs disponibles:"
 for j in valid_jobs: 
-    epilog += valid_jobs[j].__name__[:-3] + ' '
-epilog = epilog[:-1]
+    epilog += ' ' + valid_jobs[j].__name__[:-3]
 
 # cmdline interpretation
 cmdline = argparse.ArgumentParser(description = "BSscrapper - Scrapper basado en Beautiful Soup v4", epilog = epilog)
+
 cmdline.add_argument("-dc", action = "store_true", dest = "debug_commit", 
                      help = "Toggle debugging mode on for database commits -- Database commits get tagged")
 cmdline.add_argument("-dp", action = "store_true", dest = "debug_program", 
@@ -131,5 +123,5 @@ for job in job_list:
     job.launch()
     logging.info("Storing job " + job.__class__.__name__ + '\'s collected stuff')
     print("Storing job " + job.__class__.__name__ + '\'s collected stuff')
-    job.store(params.file_commit)
+    job.store(params.file_commit)   # if commit is done to a file the only one concerned is the one what stores
 

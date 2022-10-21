@@ -1,6 +1,6 @@
 from Scrappers.Articles import Article
 from Scrappers.Articles import MainArticle
-from Scrappers.Scraps.ScrapsSQL import ScrapsSQL
+# from Scrappers.Scraps.ScrapsSQL import ScrapsSQL
 from Scrappers.Scraps.ScrapsMongoDB import ScrapsMongoDB
 
 class Scraps():
@@ -13,11 +13,11 @@ class Scraps():
                                             dbg = dbg)
 
         # init SQL scraps
-        self.scraps_SQL = ScrapsSQL(job_name = job_name, 
-                                    url = url, 
-		                            primary_key = primary_key,
-		                            capture_datetime = capture_datetime,
-                                    dbg = dbg)
+        # self.scraps_SQL = ScrapsSQL(job_name = job_name, 
+        #                             url = url, 
+		#                             primary_key = primary_key,
+		#                             capture_datetime = capture_datetime,
+        #                             dbg = dbg)
 
     def set_debug_flag(self ):               # Instead of manually flipping it on, it's propagated from constructor to
         self.scraps_MongoDB.set_debug_flag() # Left it as an utility function just in case. Not actually used
@@ -65,13 +65,3 @@ class Scraps():
     
     def doc_level0(self):
         return self.scraps_MongoDB.doc_level0()
-
-    # These are just redirectors to the appropriate fuctions in ScrapsSQL
-    def SQL_stash_row(self, row):
-        return self.scraps_SQL.stash_row(row)
-
-    def SQL_as_lists_list(self):
-        return self.scraps_SQL.as_lists_list()
-    
-    def SQL_dump_as_string(self):
-        return self.scraps_SQL.dump_as_string()
