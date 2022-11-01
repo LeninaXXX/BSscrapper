@@ -5,21 +5,25 @@ from Scrappers.Scrapper import MainArticle
 from Scrappers.Scrapper import Article
 from Scrappers.Scrapper import Scraps
 
+from Scrappers.Scraps.ScrapsSQL import SQLArticlesScrapV2Row as Row
+
 import bs4 as bs
 import lxml
-
 import logging
+from datetime import datetime
 
 class InfobaeScrapper(Scrapper):    
     def go_scrape(self, ret):
+        # ##########################
         # First, tuck away raw data:
+        # ##########################
         soup = bs.BeautifulSoup(ret.text, 'lxml')
         beg_size = len(str(soup))
        
-        for discard_tag in ("script", "style"):
+        for discard_tag in ("script", "style"):     # decompose all instances of irrelevant tags
             for t in soup.find_all(discard_tag): t.decompose()
 
-        #
+        # output some statistics regarding pruning
         pruned_text = str(soup)
         end_size = len(pruned_text)
         print(self.job_name + " | end_size :: ", end_size)
@@ -36,7 +40,9 @@ class InfobaeScrapper(Scrapper):
         print('-' * 60)
         
         self.scraps.set_rawdata(ret, pruned_text)
+        # #######
         # end_of: raw data saving ... soup's already pruned, so no need to reparse it.
+        # #######
 
         # Measure size of <head> -- keep in mind that <script> and <style> tags have been stripped
         head_list = list(soup.find_all('head'))
@@ -90,56 +96,140 @@ class InfobaeScrapper(Scrapper):
         for tag in ['section', 'article', 'header', 'footer']:
             self.scraps.doc_level0()["n-" + tag + '-tags'] = len(list(soup.find_all(tag)))
 
+        # ######
+        # Level 1: Left for later... maybe never...
+        # ######
 
-#        # tuck away rawdata
-#        self.scraps.set_rawdata(ret)
-#
-#        soup = bs.BeautifulSoup(ret.text, 'lxml')
-#        
-#        # MAIN ARTICLE
-#        # Pivot tag for main article
-#        articles_tags = list(soup.find_all('h2', class_ = 'cst_hl'))    # + list(soup.find_all('h2', class_ = 'opi_hl'))
-#                                                                        # FIXME!: opi_hl -- Opinion articles
-#                                                                        # These have a different wrapping and href resides
-#                                                                        # presumably higher in the tree
-#        headline_tag, articles_tags = articles_tags[:1], articles_tags[1:]
-#        headline_tag = headline_tag[0]
-#
-#                                        # Puede haber mas de un headline
-#        # headline_tag = soup.find('h2')  # Puede haber mas de un headline
-#                                        # XXX: Ya mostro la fragilidad... no siempre la clase es la misma
-#                                        # Durante una noche fue "dkt_fs_40" ...
-#                                        #                   ... paso a ser "dkts_fs_36"
-#                                        # Es mas seguro confiar en que es el primer <h2>
-#        # headline_tag = headlines_tags[0]    # me quedo con uno porque me tengo que quedar con alguno...
-#        
-#        # Extract headline article title
-#        headline_title = str(headline_tag.string)
-#
-#        # Use headline tag to pivot upwards in the tree
-#        headline_parent = headline_tag.parent
-#        headline_slug = headline_parent.attrs['href']
-#        headline_category = headline_slug.split('/')[1]
-#        # XXX: CAREFUL, BRITTLE: This assumes a lead in the first <div> tag
-#        headline_lead = headline_parent.find('div', class_ = re.compile("_deck")).string
-#        
-#        self.scraps.add_main_article(MainArticle(headline_title,
-#                                                 headline_slug,
-#                                                 headline_category,
-#                                                 headline_lead))
-#        # ARTICLES
-#        #                                   general.................................................opinion
-#        # articles_tags = list(soup.find_all('h2', class_ = 'cst_hl')) + list(soup.find_all('h2', class_ = 'opi_hl'))
-#        # articles_tags = articles_tags[1:]   # Trim the first, otherwise it's gonna be included twice
-#        # print('len(article_tags) ==', len(articles_tags))
-#        for i, a in enumerate(articles_tags):
-#            a_title = a.string
-#            a_parent = a.parent
-#            try:
-#                a_slug = a_parent.attrs['href']
-#            except:
-#                print('-' * 20, i, '-' * 20)
-#                print(a_parent.prettify())
-#            a_category = a_slug.split('/')[1]
-#            self.scraps.add_article(Article(a_title, a_slug, a_category, None))
-#
+        # ######
+        # Level 2: Left for later... maybe never...
+        # ######
+        
+        from Scrappers.Scraps.ScrapsSQL import SQL_articles_scrap_v2_schema as SQL_schema
+        import copy
+
+        datamodel_dict = copy.copy(SQL_schema)              # shitty cruft done in order not to duplicate datamodel definition nor duplicating points of maintenance
+        datamodel_dict = {f: None for f in datamodel_dict}  # Clean it...
+
+        anchored_articles = {}      # Pivoting on <h2>s
+        non_anchored_articles = {}  # 
+
+        for i, h2 in enumerate(hs['h2']):
+            try:
+                tuple(map(lambda tag: tag.name.lower(), h2.parents)).index('a')
+            except ValueError:
+                non_anchored_articles[h2] = h2
+                print(f'Non-anchored <h2> found: [{i}]')
+                continue
+            anchored_articles[h2] = copy.copy(datamodel_dict)   # set a datamodel_dict apart 
+
+        # 'anchored_articles' are those under the hierarchy of an <a> tag. Such 
+        for i, h2 in enumerate(anchored_articles):
+            # Routine data
+            anchored_articles[h2]['UKEY'] = None
+            anchored_articles[h2]['JOB'] = self.job_name
+            anchored_articles[h2]['VOLANTA'] = "N/A -- INFOBAE HAS NO VOLANTAS!!!"
+            anchored_articles[h2]['Origen'] = self.url
+            anchored_articles[h2]['FechaFiltro'] = self.capture_datetime
+            anchored_articles[h2]['FechaCreacion'] = self.capture_datetime
+            anchored_articles[h2]['FechaModificacion'] = self.capture_datetime
+
+            # ARTICLE : order of <h2> tag within <h2>s tags
+            ARTICLE = str(hs['h2'].index(h2))
+            anchored_articles[h2]['ARTICLE'] = ARTICLE
+
+            # TITLE extraction
+            TITLE = h2.get_text().strip()
+            anchored_articles[h2]['TITLE'] = TITLE
+
+            # AUTHOR extraction
+            # AdHoc sanitization of AUTHOR fields
+            anchor_cursor = h2
+            while anchor_cursor.name.lower() != 'a':
+                anchor_cursor = anchor_cursor.parent
+            author_candidates_list = list(map(lambda tag: tag.get_text(), anchor_cursor.find_all(class_ = 'overlay_ctn')))
+            author_candidate = author_candidates_list[0] if len(author_candidates_list) != 0 else None
+
+            if author_candidate and isinstance(author_candidate, str):    # If at least there's an author_candidate and is a string (just in case)...
+                if author_candidate.find(',') != -1: # Sometimes a clarification is made with a comma in the middle...
+                    author_candidate = author_candidate[: author_candidate.find(',')]   # ... strip it
+                if author_candidate.find('-') != -1: # Sometimes accompanying VIDEO/AUDIO is denoted separated by '-' 
+                    author_candidate = author_candidate[: author_candidate.find('-')]
+                author_candidate = author_candidate.strip()     # ... just to be sure...
+
+                # Starting 'Por' denotes autorship...
+                if author_candidate[0:4] == 'Por ':
+                    author_candidate = author_candidate[3:].strip() # At this point, compromise into assuming it's an author
+
+                if author_candidate.upper() == author_candidate:    # If it's all uppercase, almost certainly ain't an author
+                    author_candidate = None
+            else:
+                author_candidate = None     # explicitly default to None if None or not-a-string, just for clarity
+
+            AUTHOR = author_candidate
+            anchored_articles[h2]['AUTHOR'] = AUTHOR
+
+            # SUMMARY extraction
+            summary_candidates_list = list(map(lambda tag: tag.get_text(), anchor_cursor.find_all(class_ = 'cst_deck')))
+            summary_candidate = summary_candidates_list[0] if len(summary_candidates_list) != 0 else None
+
+            SUMMARY = summary_candidate
+            anchored_articles[h2]['SUMMARY'] = SUMMARY
+
+            # SLUG extraction
+            SLUG = h2.parent.get('href') # This is only going one parent upwards
+            # I might wanna be looking for the nearest <a> tag upwards...
+            # print(f'{i:3d}', tuple(map(lambda tag: tag.name, h2.parents))) # index of the nearest upwards <a>nchor tag
+            anchored_articles[h2]['SLUG'] = SLUG
+
+            # CATEGORY & SUBCATEGORY extraction
+            if SLUG:    # Only if there's a SLUG present attempt to extract
+                if SLUG[0] == '/':  # CATEGORY: Only if Relative address -- SLUG EXTERNAL == False
+                    anchored_articles[h2]['SLUG_INTERNAL'] = True
+                    anchored_articles[h2]['CATEGORY'] = SLUG.split('/')[1]
+                    if (SLUG.split('/')[2][0] in tuple(map(chr, range(ord('a'), ord('z') + 1))) + tuple(map(chr, range(ord('A'), ord('Z') + 1)))):
+                        anchored_articles[h2]['SUBCATEGORY'] = SLUG.split('/')[2]
+                elif SLUG[0:4].lower() in ('http://', 'https://'):
+                    anchored_articles[h2]['SLUG_INTERNAL'] = False
+                    anchored_articles[h2]['CATEGORY'] = False
+                    anchored_articles[h2]['SUBCATEGORY'] = False
+                else:
+                    anchored_articles[h2]['CATEGORY'] = None
+                    anchored_articles[h2]['SUBCATEGORY'] = None
+                    anchored_articles[h2]['SLUG_INTERNAL'] = None
+            else:   # if SLUG is None 'Category' should be None too
+                anchored_articles[h2]['CATEGORY'] = None
+                anchored_articles[h2]['SUBCATEGORY'] = None
+                anchored_articles[h2]['SLUG_INTERNAL'] = None
+
+            anchored_articles[h2]['TITLE_WORD_COUNT'] = len(h2.get_text().strip().split(' '))
+
+        # Stash it away
+        for h2 in anchored_articles:
+            row = Row(str(datetime.now()) + '-' + str(anchored_articles[h2]['ARTICLE']),    # UKEY
+                      anchored_articles[h2]['TITLE'],
+                      anchored_articles[h2]['JOB'],
+                      anchored_articles[h2]['TITLE'],
+                      anchored_articles[h2]['TITLE_WORD_COUNT'],
+                      anchored_articles[h2]['ARTICLE'],
+                      anchored_articles[h2]['CLUSTER'],
+                      anchored_articles[h2]['CLUSTER_INDEX'],
+                      anchored_articles[h2]['CLUSTER_SIZE'],
+                      anchored_articles[h2]['CLUSTER_UNIQUE'],
+                      anchored_articles[h2]['AUTHOR'],
+                      anchored_articles[h2]['SUMMARY'],
+                      anchored_articles[h2]['VOLANTA'],
+                      anchored_articles[h2]['CATEGORY'],
+                      anchored_articles[h2]['SUBCATEGORY'],
+                      anchored_articles[h2]['SLUG'],
+                      anchored_articles[h2]['SLUG_INTERNAL'],
+                      anchored_articles[h2]['Origen'],
+                      anchored_articles[h2]['FechaFiltro'],
+                      anchored_articles[h2]['FechaCreacion'],
+                      anchored_articles[h2]['FechaModificacion'],
+                     )
+
+            if self.scraps.SQL_stash_row_given_schema(row, SQL_schema, Row):
+                pass
+            else:
+                logging.error(f"Error while stashing row:")
+                logging.error(f"Row: {row}")

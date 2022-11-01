@@ -1,19 +1,16 @@
 # ClarinScrapper.py -- Scrapper subclass
 
-from datetime import datetime
-from lib2to3.pgen2.token import AT
 from Scrappers.Scrapper import Scrapper
 from Scrappers.Scrapper import MainArticle
 from Scrappers.Scrapper import Article
 from Scrappers.Scrapper import Scraps
-from Scrappers.Scraps.ScrapsSQL import SQLArticlesScrapV1Row as Row
-# from utils.BSutils import tag_nearest_attrs, tag_nearest_name
 
+from Scrappers.Scraps.ScrapsSQL import SQLArticlesScrapV1Row as Row
 
 import bs4 as bs
 import lxml
-
 import logging
+from datetime import datetime
 
 class ClarinScrapper(Scrapper):    
     def go_scrape(self, ret):
@@ -157,7 +154,12 @@ class ClarinScrapper(Scrapper):
         for i, section in enumerate(h2s_by_section):
             for j, h2 in enumerate(section):
                 h2_parents_names = [tag.name for tag in h2.parents]
-                h2_article = list(h2.parents)[h2_parents_names.index('article')]
+                try:        # 01/11/2022 :: Skip over those <h2>s without a parent <article>
+                    h2_article = list(h2.parents)[h2_parents_names.index('article')]
+                except ValueError:
+                    logging.info(f"<h2> with no <article> in parents")
+                    logging.info(f"<h2> :: {h2}")
+                    continue
 
                 # article title
                 TITLE = h2.get_text()
@@ -169,7 +171,7 @@ class ClarinScrapper(Scrapper):
                 try:
                     AUTHOR = article_author_tag.get_text()
                 except AttributeError:
-                    AUTHOR = None
+                    AUTHOR = None       # TODO: Cuando AUTHOR == DIARIO OLE ... 
                 
                 # Try extract <article>'s summary -- default to None if none is found; most of the times isn't
                 article_summary_tag = h2_article.find(class_ = 'summary') or h2_article.find(class_ = 'summary-rel')

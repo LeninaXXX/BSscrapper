@@ -16,7 +16,7 @@ class SQLServer(Database):
     def __init__(self):
         try:
             self.conn = pyodbc.connect('Driver={SQL Server};'
-                                        'Server=172.16.6.64;'
+                                        'Server=192.168.100.18;'
                                         'Database=ANALITICA_DEV;'
                                         'UID=python_externo;'
                                         'PWD=MazzPython01'

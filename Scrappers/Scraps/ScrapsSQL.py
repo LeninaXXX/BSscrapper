@@ -19,6 +19,54 @@ SQL_articles_scrap_v1_schema = {'UKEY'              : 100,  # TODO: use this to 
                                 'FechaCreacion'     : None,
                                 'FechaModificacion' : None
                                }
+
+SQL_articles_scrap_v2_schema = {'UKEY'                    : 100,   # From InfobaeScrapper
+                                'JOB'                     : 50,
+                                'TITLE'                   : 200,
+                                'TITLE_WORD_COUNT'        : None,
+                                'ARTICLE'                 : 50,   # New field - Article number among articles
+                                'CLUSTER'                 : None,   # New field - Cluster number to which this article belongs
+                                'CLUSTER_INDEX'           : None,   # New field - Article number inside cluster
+                                'CLUSTER_SIZE'            : None,   # New field - Size of the cluster to which this belongs
+                                'CLUSTER_UNIQUE'          : None,   # New field - does this artice belong to a single cluster?
+                                'AUTHOR'                  : 50,
+                                'SUMMARY'                 : 500,
+                                'VOLANTA'                 : 100,
+                                'CATEGORY'                : 100,
+                                'SUBCATEGORY'             : 100,   # New field - 
+                                'SLUG'                    : 300,
+                                'SLUG_INTERNAL'           : None,  # New field -
+                                'Origen'                  : 50,
+                                'FechaFiltro'             : None,
+                                'FechaCreacion'           : None,
+                                'FechaModificacion'       : None,
+                               }
+
+SQLArticlesScrapV2Row = namedtuple('SQLArticlesScrapV2Row',     # CREATE TABLE articles_scrap_v2 (
+                                   [ 'UKEY',                    #   UKEY VARCHAR(100),
+                                     'JOB',                     #   JOB VARCHAR(50),
+                                     'TITLE',                   #   TITLE VARCHAR(200),
+                                     'TITLE_WORD_COUNT',        #   TITLE_WORD_COUNT INT,
+                                     'ARTICLE',                 #   ARTICLE INT,
+                                     'CLUSTER',                 #   CLUSTER INT,       
+                                     'CLUSTER_INDEX',           #   CLUSTER_INDEX INT,
+                                     'CLUSTER_SIZE',            #   CLUSTER_SIZE INT,   
+                                     'CLUSTER_UNIQUE',          #   CLUSTER_UNIQUE INT, 
+                                     'AUTHOR',                  #   AUTHOR VARCHAR(50),
+                                     'SUMMARY',                 #   SUMMARY VARCHAR(500),
+                                     'VOLANTA',                 #   VOLANTA VARCHAR(100),
+                                     'CATEGORY',                #   CATEGORY VARCHAR(100),
+                                     'SUBCATEGORY',             #   SUBCATEGORY VARCHAR(100),
+                                     'SLUG',                    #   SLUG VARCHAR(300),
+                                     'SLUG_INTERNAL',           #   SLUG_INTERNAL BOOLEAN
+                                     'Origen',                  #   Origen VARCHAR(50),         
+                                     'FechaFiltro',             #   FechaFiltro DATE,    
+                                     'FechaCreacion',           #   FechaCreacion DATE,  
+                                     'FechaModificacion',       #   FechaModificacion DATE
+                                   ],                           # )
+                                   defaults = [None] * 20
+                                  )
+
 SQLArticlesScrapV1Row = namedtuple('SQLArticlesScrapV1Row',     # CREATE TABLE articles_scrap_v1 (
                                    [ 'UKEY',                    # 	UKEY VARCHAR(100),
                                      'JOB',                     # 	JOB VARCHAR(50),
@@ -46,7 +94,7 @@ class ScrapsSQL():
         self.dbg = dbg
 
         self.SQL_articles_scrap_v1_cols = list(SQL_articles_scrap_v1_schema.keys())
-        self.SQL_articles_scrap_v1 = []
+        self.SQL_articles_scraps = []
 
     def stash_row(self, row):
         """
@@ -78,7 +126,7 @@ class ScrapsSQL():
             # validated_dict['UKEY'] = str(datetime.datetime.now())
             # debug:
             # print("validated_dict['UKEY'] : ", validated_dict['UKEY'])
-            self.SQL_articles_scrap_v1.append(SQLArticlesScrapV1Row(**validated_dict))
+            self.SQL_articles_scraps.append(SQLArticlesScrapV1Row(**validated_dict))
             return True
 
         except Exception as e:
@@ -89,18 +137,48 @@ class ScrapsSQL():
             logging.error('Exception information:', exc_info = e)
             return False
 
+    def stash_row_given_schema(self, row, schema, schema_row):  # NOTE: @ 01/11/2022 during InfobaeScrapper.py dev'ment
+        "Attempt at quick generalization of above method"
+        validated_dict = {}
+        
+        try:
+            for field in list(schema.keys()): #[1:]:  # Except UKEY from inspection given that it will be ignored and computed locally
+                if schema[field]:     # None works as a flag for fields to be trusted...
+                    if (len(getattr(row, field)) if getattr(row, field) else 0) > schema[field]:
+                        # log if a datum exceeds its expected field width
+                        logging.warning(f'Field "{field}" exceeds database schema field width of {schema[field]}')
+                        logging.warning(f'Dumping row attempted to stash and schema:')
+                        logging.warning(f'ROW:    {row}')
+                        logging.warning(f'SCHEMA: {schema}')
+                    validated_dict[field] = getattr(row, field)[ : schema[field]] if getattr(row, field) else None # Trim to size
+                else:
+                    validated_dict[field] = getattr(row, field) # FIXME: if no size defined, just trust it...
+            # validated_dict['UKEY'] = str(datetime.datetime.now())
+            # debug:
+            # print("validated_dict['UKEY'] : ", validated_dict['UKEY'])
+            self.SQL_articles_scraps.append(schema_row(**validated_dict))
+            return True
+
+        except Exception as e:
+            logging.error('Unable to validate and stash ')
+            logging.error(f'Dumping row attempted to stash and schema:')
+            logging.error(f'ROW:    {row}')
+            logging.error(f'SCHEMA: {schema}')
+            logging.error('Exception information:', exc_info = e)
+            return False
+
     def as_lists_list(self):
         """
         Allows access to what's already stashed in self.SQL_articles_scrap_v1 as a list
         """
-        return self.SQL_articles_scrap_v1
+        return self.SQL_articles_scraps
 
     def dump_as_string(self):
         """
         Just for debugging
         """
         dump_str = ', '.join([str(k) + ' (' + str(SQL_articles_scrap_v1_schema[k]) + ')' for k in SQL_articles_scrap_v1_schema]) + '\n'
-        for row in self.SQL_articles_scrap_v1:
+        for row in self.SQL_articles_scraps:
             dump_str += str(row) + '\n'
 
         return dump_str    

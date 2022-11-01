@@ -70,6 +70,11 @@ class Scraps():
     def SQL_stash_row(self, row):
         return self.scraps_SQL.stash_row(row)
 
+    # These are just redirectors to the appropriate fuctions in ScrapsSQL
+    def SQL_stash_row_given_schema(self, row, schema):
+        return self.scraps_SQL.stash_row_given_schema(row, schema)
+
+
     def SQL_as_lists_list(self):
         return self.scraps_SQL.as_lists_list()
     

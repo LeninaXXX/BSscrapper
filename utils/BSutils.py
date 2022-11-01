@@ -1,6 +1,6 @@
 # BSutils.py
 # Improvised utilities to deal with BeautifulSoup results, to make some sense of the tree
-
+    
 def tag_depth(node):
     """
     Returns depth of node in hierarchy
