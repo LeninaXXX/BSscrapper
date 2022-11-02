@@ -58,7 +58,7 @@ SQLArticlesScrapV2Row = namedtuple('SQLArticlesScrapV2Row',     # CREATE TABLE a
                                      'CATEGORY',                #   CATEGORY VARCHAR(100),
                                      'SUBCATEGORY',             #   SUBCATEGORY VARCHAR(100),
                                      'SLUG',                    #   SLUG VARCHAR(300),
-                                     'SLUG_INTERNAL',           #   SLUG_INTERNAL BOOLEAN
+                                     'SLUG_INTERNAL',           #   SLUG_INTERNAL INT,
                                      'Origen',                  #   Origen VARCHAR(50),         
                                      'FechaFiltro',             #   FechaFiltro DATE,    
                                      'FechaCreacion',           #   FechaCreacion DATE,  
@@ -94,6 +94,7 @@ class ScrapsSQL():
         self.dbg = dbg
 
         self.SQL_articles_scrap_v1_cols = list(SQL_articles_scrap_v1_schema.keys())
+        self.SQL_articles_scrap_v2_cols = list(SQL_articles_scrap_v2_schema.keys()) # 02/11/2022 during InfobaeScrapper.py dev'ment
         self.SQL_articles_scraps = []
 
     def stash_row(self, row):

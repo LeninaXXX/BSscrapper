@@ -71,8 +71,8 @@ class Scraps():
         return self.scraps_SQL.stash_row(row)
 
     # These are just redirectors to the appropriate fuctions in ScrapsSQL
-    def SQL_stash_row_given_schema(self, row, schema):
-        return self.scraps_SQL.stash_row_given_schema(row, schema)
+    def SQL_stash_row_given_schema(self, row, schema, schema_row):
+        return self.scraps_SQL.stash_row_given_schema(row, schema, schema_row)
 
 
     def SQL_as_lists_list(self):

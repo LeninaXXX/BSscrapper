@@ -14,6 +14,9 @@ from datetime import datetime
 
 class ClarinScrapper(Scrapper):    
     def go_scrape(self, ret):
+        # FIXME: 02/11/2022 : This kludge is here to allow each job to refer to different tables
+        #        with different column format
+        self.SQL_cols = self.scraps.scraps_SQL.SQL_articles_scrap_v1_cols
         # ##########################
         # First, tuck away raw data:
         # ##########################

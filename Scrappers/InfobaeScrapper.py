@@ -14,6 +14,9 @@ from datetime import datetime
 
 class InfobaeScrapper(Scrapper):    
     def go_scrape(self, ret):
+        # FIXME: 02/11/2022 : This kludge is here to allow each job to refer to different tables
+        #        with different column format
+        self.SQL_cols = self.scraps.scraps_SQL.SQL_articles_scrap_v2_cols
         # ##########################
         # First, tuck away raw data:
         # ##########################
@@ -113,7 +116,7 @@ class InfobaeScrapper(Scrapper):
         anchored_articles = {}      # Pivoting on <h2>s
         non_anchored_articles = {}  # 
 
-        for i, h2 in enumerate(hs['h2']):
+        for i, h2 in enumerate(hs[2]):
             try:
                 tuple(map(lambda tag: tag.name.lower(), h2.parents)).index('a')
             except ValueError:
@@ -134,7 +137,7 @@ class InfobaeScrapper(Scrapper):
             anchored_articles[h2]['FechaModificacion'] = self.capture_datetime
 
             # ARTICLE : order of <h2> tag within <h2>s tags
-            ARTICLE = str(hs['h2'].index(h2))
+            ARTICLE = str(hs[2].index(h2))
             anchored_articles[h2]['ARTICLE'] = ARTICLE
 
             # TITLE extraction
@@ -184,29 +187,50 @@ class InfobaeScrapper(Scrapper):
             # CATEGORY & SUBCATEGORY extraction
             if SLUG:    # Only if there's a SLUG present attempt to extract
                 if SLUG[0] == '/':  # CATEGORY: Only if Relative address -- SLUG EXTERNAL == False
-                    anchored_articles[h2]['SLUG_INTERNAL'] = True
+                    anchored_articles[h2]['SLUG_INTERNAL'] = 1
                     anchored_articles[h2]['CATEGORY'] = SLUG.split('/')[1]
                     if (SLUG.split('/')[2][0] in tuple(map(chr, range(ord('a'), ord('z') + 1))) + tuple(map(chr, range(ord('A'), ord('Z') + 1)))):
                         anchored_articles[h2]['SUBCATEGORY'] = SLUG.split('/')[2]
                 elif SLUG[0:4].lower() in ('http://', 'https://'):
-                    anchored_articles[h2]['SLUG_INTERNAL'] = False
+                    anchored_articles[h2]['SLUG_INTERNAL'] = 0
                     anchored_articles[h2]['CATEGORY'] = False
                     anchored_articles[h2]['SUBCATEGORY'] = False
                 else:
                     anchored_articles[h2]['CATEGORY'] = None
                     anchored_articles[h2]['SUBCATEGORY'] = None
-                    anchored_articles[h2]['SLUG_INTERNAL'] = None
+                    anchored_articles[h2]['SLUG_INTERNAL'] = -1
             else:   # if SLUG is None 'Category' should be None too
                 anchored_articles[h2]['CATEGORY'] = None
                 anchored_articles[h2]['SUBCATEGORY'] = None
-                anchored_articles[h2]['SLUG_INTERNAL'] = None
+                anchored_articles[h2]['SLUG_INTERNAL'] = -1
 
             anchored_articles[h2]['TITLE_WORD_COUNT'] = len(h2.get_text().strip().split(' '))
 
         # Stash it away
         for h2 in anchored_articles:
-            row = Row(str(datetime.now()) + '-' + str(anchored_articles[h2]['ARTICLE']),    # UKEY
-                      anchored_articles[h2]['TITLE'],
+            UKEY = str(datetime.now()) + '-' + str(anchored_articles[h2]['ARTICLE'])
+            # print("DBG::", UKEY)
+            # print("DBG::", anchored_articles[h2]['JOB'])
+            # print("DBG::", anchored_articles[h2]['TITLE'])
+            # print("DBG::", anchored_articles[h2]['TITLE_WORD_COUNT'])
+            # print("DBG::", anchored_articles[h2]['ARTICLE'])
+            # print("DBG::", anchored_articles[h2]['CLUSTER'])
+            # print("DBG::", anchored_articles[h2]['CLUSTER_INDEX'])
+            # print("DBG::", anchored_articles[h2]['CLUSTER_SIZE'])
+            # print("DBG::", anchored_articles[h2]['CLUSTER_UNIQUE'])
+            # print("DBG::", anchored_articles[h2]['AUTHOR'])
+            # print("DBG::", anchored_articles[h2]['SUMMARY'])
+            # print("DBG::", anchored_articles[h2]['VOLANTA'])
+            # print("DBG::", anchored_articles[h2]['CATEGORY'])
+            # print("DBG::", anchored_articles[h2]['SUBCATEGORY'])
+            # print("DBG::", anchored_articles[h2]['SLUG'])
+            # print("DBG::", anchored_articles[h2]['SLUG_INTERNAL'])
+            # print("DBG::", anchored_articles[h2]['Origen'])
+            # print("DBG::", anchored_articles[h2]['FechaFiltro'])
+            # print("DBG::", anchored_articles[h2]['FechaCreacion'])
+            # print("DBG::", anchored_articles[h2]['FechaModificacion'])
+
+            row = Row(UKEY,    # UKEY
                       anchored_articles[h2]['JOB'],
                       anchored_articles[h2]['TITLE'],
                       anchored_articles[h2]['TITLE_WORD_COUNT'],
@@ -225,7 +249,7 @@ class InfobaeScrapper(Scrapper):
                       anchored_articles[h2]['Origen'],
                       anchored_articles[h2]['FechaFiltro'],
                       anchored_articles[h2]['FechaCreacion'],
-                      anchored_articles[h2]['FechaModificacion'],
+                      anchored_articles[h2]['FechaModificacion']
                      )
 
             if self.scraps.SQL_stash_row_given_schema(row, SQL_schema, Row):

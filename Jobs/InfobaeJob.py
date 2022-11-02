@@ -17,6 +17,9 @@ class InfobaeJob(Job):
         self.params = params
         self.dbg = dbg                  # Debugging mode -- False by default. Tags database commmits as "dbg_flag = True"
         
+        # SQL Parameters
+        self.job_sql_table = 'articles_scrap_v2' if not dbg else 'articles_scrap_v2_dbg'
+
         self.primary_key = None			# This signals not ready to commit to database
         self.capture_datetime = None	# This signals not ready to commit to database
 
