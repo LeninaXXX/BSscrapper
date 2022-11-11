@@ -19,7 +19,7 @@ class SQLServer(Database):
                                         'Server=192.168.100.18;'
                                         'Database=ANALITICA_DEV;'
                                         'UID=python_externo;'
-                                        'PWD=MazzPython01'
+                                        'PWD=MazzPythonNew'
                                         # 'Trusted_Connection=yes;'
                                         )
             # self.conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+'BUEANA03'+';DATABASE='+database+';UID='+username+';PWD='+ password)
@@ -48,6 +48,17 @@ class SQLServer(Database):
             cursor.executemany(statement, payload)
         except pyodbc.DatabaseError as e:
             logging.error("DatabaseError exception while trying to do .executemany() operation", exc_info = e)
+        else:
+            cursor.commit()
+
+    def execute_stored_procedure(self):
+        logging.info("Executing stored procedure")
+        cursor = self.conn.cursor()
+        statement = "execute SET_horaFechaID_INSERT_DIFERENCIAS"
+        try:
+            cursor.execute(statement)
+        except pyodbc.DatabaseError as e:
+            logging.error(f"Error while executing stored procedure '{statement}", exc_info = e)
         else:
             cursor.commit()
 

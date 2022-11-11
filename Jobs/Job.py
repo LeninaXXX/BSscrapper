@@ -1,10 +1,7 @@
 # Job.py -- general superclass
 
-import pandas as pd
 import datetime
-import time
 import logging
-import traceback
 
 from Requesters.Requester import Requester
 from Scrappers.Scrapper import Scrapper
@@ -77,7 +74,7 @@ class Job():
                 self.sql_connection.insert_list_of_lists(self.job_sql_table,        # table pointed to by the job -- declared in <target>Job.py
                                                          self.scrapper.SQL_cols,    # 
                                                          self.scrapper.scraps.scraps_SQL.as_lists_list())               # This should work as it is
-                
+                self.sql_connection.execute_stored_procedure()
                 # 02/11/2022 during InfobaeScrapper.py dev'ment
                 # self.sql_connection.insert_list_of_lists('articles_scrap_v1', 
                 #                                          self.scrapper.scraps.scraps_SQL.SQL_articles_scrap_v1_cols, 
