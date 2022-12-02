@@ -60,9 +60,9 @@ SQLArticlesScrapV2Row = namedtuple('SQLArticlesScrapV2Row',     # CREATE TABLE a
                                      'SLUG',                    #   SLUG VARCHAR(300),
                                      'SLUG_INTERNAL',           #   SLUG_INTERNAL INT,
                                      'Origen',                  #   Origen VARCHAR(50),         
-                                     'FechaFiltro',             #   FechaFiltro DATE,    
-                                     'FechaCreacion',           #   FechaCreacion DATE,  
-                                     'FechaModificacion',       #   FechaModificacion DATE
+                                     'FechaFiltro',             #   FechaFiltro DATETIME,    
+                                     'FechaCreacion',           #   FechaCreacion DATETIME,  
+                                     'FechaModificacion',       #   FechaModificacion DATETIME
                                    ],                           # )
                                    defaults = [None] * 20
                                   )
