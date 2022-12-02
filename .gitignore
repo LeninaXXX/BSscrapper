@@ -1,5 +1,6 @@
 # Mine -- Lenina's
 # jupyter_notebooks/
+jupyter_notebooks/dump/
 docs/
 .dev/
 .test/

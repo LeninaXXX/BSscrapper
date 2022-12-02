@@ -24,7 +24,7 @@ SQL_articles_scrap_v2_schema = {'UKEY'                    : 100,   # From Infoba
                                 'JOB'                     : 50,
                                 'TITLE'                   : 200,
                                 'TITLE_WORD_COUNT'        : None,
-                                'ARTICLE'                 : 50,   # New field - Article number among articles
+                                'ARTICLE'                 : None,     # New field - Article number among articles
                                 'CLUSTER'                 : None,   # New field - Cluster number to which this article belongs
                                 'CLUSTER_INDEX'           : None,   # New field - Article number inside cluster
                                 'CLUSTER_SIZE'            : None,   # New field - Size of the cluster to which this belongs

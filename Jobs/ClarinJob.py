@@ -1,8 +1,6 @@
 # Clarin.py -- subclase de Job
 
-import datetime
-import time
-import logging
+import datetime, logging
 
 from Jobs.Job import Job
 

@@ -1,8 +1,6 @@
-# LanacionJobs.py -- subclase de Jobs
+# LanacionJobs.py -- Jobs subclass
 
 import datetime
-import time
-import logging
 
 from Jobs.Job import Job
 
@@ -17,8 +15,11 @@ class LanacionJob(Job):
         self.params = params
         self.dbg = dbg                  # Debugging mode -- False by default. Tags database commmits as "dbg_flag = True"
         
-        self.primary_key = None			# This signals not ready to commit to database
-        self.capture_datetime = None	# This signals not ready to commit to database
+        # SQL Parameters -- NOTE: 2022-11-10 -- No new fields to be added in this iteration, but try to fill article/cluster
+        self.job_sql_table = 'articles_scrap_v2_la_nacion' if not dbg else 'articles_scrap_v2_dbg'
+
+        self.primary_key = None			                # This signals not ready to commit to database
+        self.capture_datetime = datetime.datetime.now() # This signals not ready to commit to database
 
         self.requester = Requester(job_name = self.job_name, url = self.url, headers = self.headers, params = self.params, dbg = self.dbg)
         self.scrapper = Scrapper(job_name = self.job_name, url = self.url, dbg = self.dbg)

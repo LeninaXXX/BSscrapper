@@ -137,7 +137,7 @@ class InfobaeScrapper(Scrapper):
             anchored_articles[h2]['FechaModificacion'] = self.capture_datetime
 
             # ARTICLE : order of <h2> tag within <h2>s tags
-            ARTICLE = str(hs[2].index(h2))
+            ARTICLE = hs[2].index(h2)
             anchored_articles[h2]['ARTICLE'] = ARTICLE
 
             # TITLE extraction

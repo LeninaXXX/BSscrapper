@@ -32,55 +32,63 @@ valid_jobs = { 'ambitofinanciero'  : AmbitofinancieroJob,
                'pagina12'          : Pagina12Job,
                'radiomitre'        : RadiomitreJob, # me habia comido este job. Costo poco agregarlo (45"). Buen approach...
                'tn'                : TNJob,
+               
                'databasetest'      : DatabaseTestJob, 
                'clarinreprocess'   : ClarinReprocessJob,
                }
 
-epilog = "Jobs disponibles:"
-for j in valid_jobs: 
-    epilog += ' ' + valid_jobs[j].__name__[:-3]
+# cmdline interpretation section 
+epilog = "Jobs disponibles: " + ' '.join((valid_jobs[job].__name__[:-3] for job in valid_jobs))  # generator ... explicitly. A matter of taste
 
-# cmdline interpretation
 cmdline = argparse.ArgumentParser(description = "BSscrapper - Scrapper basado en Beautiful Soup v4", epilog = epilog)
 
-cmdline.add_argument("-dc", action = "store_true", dest = "debug_commit", 
+cmdline.add_argument("-dc", 
+                     action = "store_true", 
+                     dest = "debug_commit", 
                      help = "Toggle debugging mode on for database commits -- Database commits get tagged")
-cmdline.add_argument("-dp", action = "store_true", dest = "debug_program", 
+
+cmdline.add_argument("-dp", 
+                     action = "store_true", 
+                     dest = "debug_program", 
                      help = "Toggle debugging mode on for program. Logger mode gets set to DEBUG")
-cmdline.add_argument("-f", action = "store_true", dest = "file_commit", 
+
+cmdline.add_argument("-f", 
+                     action = "store_true", 
+                     dest = "file_commit", 
                      help = "Commit result of scrapping to file, not to database. Here for debugging purposes")
-cmdline.add_argument("-j", action = "append", dest = "jobs", 
+
+cmdline.add_argument("-j", 
+                     action = "append", 
+                     dest = "jobs", 
                      help = "Jobs a disparar. Uno por '-j'")
 
-params = cmdline.parse_args()   # TODO: Available params and what are they intended for:
+
+params = cmdline.parse_args()   # Available params and what are they intended for:
                                 #   debug_commit:   Database commits should get tagged as DBG
                                 #   debug_program:  Program get much more verbose when it comes to logging
                                 #   file_commit:    No commits to database. Dump to file for inspection instead
                                 #   jobs:           list of jobs to be executed
 
-# TODO: to implement debugging switches as a 'bundle' instead of loose switches, for brevity and clarity
-#       pack everything into a named- (for clarity) -tuple (for brevity)
-dbg = namedtuple('DebugTuple', ['commit', 'program', 'file_commit']) 
-(dbg.commit, dbg.program, dbg.file_commit) = (params.debug_commit, params.debug_program, params.file_commit)
+DebugTuple = namedtuple('DebugTuple', ['commit', 'program', 'file_commit']) # Packs debugging switches
+dbg = DebugTuple(commit = params.debug_commit,      # Intended to flag database commits as debugging. MongoDB, a dbg flag. SQL commit to a different table (*_dbg)
+                 program = params.debug_program,    # 
+                 file_commit = params.file_commit)  # 
 
-if params.debug_program:
-    print("cmdline:\n\t", cmdline)
-    print()
-    print("params:\n\t", params)
+if dbg.program:
+    print(f"cmdline:\n\t{cmdline}\nparams:\n\t{params}")    
 
 if not params.jobs:
     print("Nada para hacer...")
     print(cmdline.prog, "-h para ver opciones y jobs disponibles")
     exit(0)
 
-# TODO: Logging config
 # Logging Config -- Comments from The Python Library Reference Release 3.9.4 by Guido van Rossum and the Python development team
 d = datetime.now()                                          # "datetime.now() : Return the current local date and time" [Page 183]
 # log path at ./logs/<year-month-day> 
 logpath = os.getcwd() + "/logs/" + d.strftime('%Y%m%d')     # "os.getcwd() : Returns a string representing the current working directory" [Page 568]
                                                             # "datetime.strftime() : Return a string representing the date and time, controlled by an explicit format string.
                                                             # For a complete list of formatting directives, see strftime() and strptime() Behavior [Page 203]" [Page 191]
-os.makedirs(logpath, exist_ok=True)                         # "os.makedirs() : Recursive directory creation function [...]" 
+os.makedirs(logpath, exist_ok = True)                       # "os.makedirs() : Recursive directory creation function [...]" 
                                                             # "If exists_ok is False (the default), an FileExistsError ir raised if the target directory already exists"
                                                             # [Page 570]
 
@@ -113,12 +121,11 @@ if job_list == []:
     print(cmdline.prog, "-h para ver opciones y jobs disponibles")
     exit(0)
 
-logging.info('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1]))
+jobs_ul_length = len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1])
 logging.info("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1])
-logging.info('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1]))
-print('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1]))
+logging.info('-' * jobs_ul_length)
 print("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1])
-print('-' * len("Jobs reconocidos :" + str([j.__class__.__name__ for j in job_list])[1:-1]))
+print('-' * jobs_ul_length)
 
 for job in job_list:
     logging.info("Launching job " + job.__class__.__name__)

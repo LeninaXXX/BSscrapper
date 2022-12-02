@@ -5,21 +5,28 @@ from Scrappers.Scrapper import MainArticle
 from Scrappers.Scrapper import Article
 from Scrappers.Scrapper import Scraps
 
+from Scrappers.Scraps.ScrapsSQL import SQLArticlesScrapV2Row as Row
+
 import bs4 as bs
 import lxml
-
 import logging
+from datetime import datetime
 
 class La100Scrapper(Scrapper):    
     def go_scrape(self, ret):
+        # FIXME: 02/11/2022 : This kludge is here to allow each job to refer to different tables
+        #        with different column format
+        self.SQL_cols = self.scraps.scraps_SQL.SQL_articles_scrap_v2_cols
+        # ##########################
         # First, tuck away raw data:
+        # ##########################
         soup = bs.BeautifulSoup(ret.text, 'lxml')
         beg_size = len(str(soup))
        
         for discard_tag in ("script", "style"):
             for t in soup.find_all(discard_tag): t.decompose()
 
-        # 
+        # output some statistics regarding pruning
         pruned_text = str(soup)
         end_size = len(pruned_text)
         print(self.job_name + " | end_size :: ", end_size)
@@ -36,7 +43,9 @@ class La100Scrapper(Scrapper):
         print('-' * 60)
 
         self.scraps.set_rawdata(ret, pruned_text)
+        # #######
         # end_of: raw data saving ... soup's already pruned, so no need to reparse it.
+        # #######
 
         # Measure size of <head> -- keep in mind that <script> and <style> tags have been stripped
         head_list = list(soup.find_all('head'))
@@ -89,3 +98,135 @@ class La100Scrapper(Scrapper):
         # Count <section>s, <article>s, <header>s, and <footer>s:
         for tag in ['section', 'article', 'header', 'footer']:
             self.scraps.doc_level0()["n-" + tag + '-tags'] = len(list(soup.find_all(tag)))
+
+        # #######
+        # Level 1: Left for later... maybe never...
+        # #######
+
+        # ######
+        # Level 2
+        # ######
+        
+        from Scrappers.Scraps.ScrapsSQL import SQL_articles_scrap_v2_schema as SQL_schema
+
+        tags_tuple = ('article', 'section', 'header', 'footer', 'aside') + tuple(('h' + str(i) for i in range(1, 7)))
+        tags = {tag_str : soup.find_all(tag_str) for tag_str in tags_tuple}
+
+        print("Harvesting information -- Scrapping!")
+        logging.info("Harvesting information -- Scrapping!")
+        article_reports = {}
+        for i, article in enumerate(tags['article']):
+            article_report = {}
+            article_report['UKEY'] = None
+            article_report['JOB'] = self.job_name
+
+            article_report['ARTICLE'] = i
+
+            titles_list = list(article.find_all('h2', class_ = 'title'))
+            if not titles_list:
+                continue
+            else:
+                title_tag = titles_list[0]
+            title = title_tag.get_text().strip()
+            
+            if not title:
+                continue
+
+            article_report['TITLE'] = title if title else None
+            article_report['TITLE_WORD_COUNT'] = len(tuple(article_report['TITLE'].split(' '))) if title else None
+
+            article_report['CLUSTER'] = None
+            article_report['CLUSTER_INDEX'] = None
+            article_report['CLUSTER_SIZE'] = None
+            article_report['CLUSTER_UNIQUE'] = None # Irrelevant
+
+            article_report['AUTHOR'] = 'LA_100 ARTICLES ARE NOT AUTHORED!'
+            article_report['SUMMARY'] = summary[0].get_text() if (summary := list(article.find_all('p', class_ = 'subtitle'))) else None
+            article_report['VOLANTA'] = 'LA_100 ARTICLES HAS NO VOLANTAS!'
+
+            hrefs_set = set(href_tag.get('href') for href_tag in article.find_all(href = True))
+
+            if hrefs_set:
+                internal_hrefs_set = {href for href in hrefs_set 
+                                           if href.find('https://la100.cienradios.com/') == 0 or
+                                              href.find('http://la100.cienradios.com/') == 0 or
+                                              href.find('/') == 0}
+                external_hrefs_set = hrefs_set - internal_hrefs_set
+                
+                if internal_hrefs_set:
+                    article_report['SLUG'] = (slug := list(internal_hrefs_set)[0])
+                    article_report['SLUG_INTERNAL'] = True
+                else: # if not internal_hrefs_set and hrefs_set then external_hrefs_set 
+                    article_report['SLUG'] = (slug := list(external_hrefs_set)[0])
+                    article_report['SLUG_INTERNAL'] = False
+                
+                try:
+                    category_list = slug.split('/')
+                except:
+                    logging.info(str(internal_hrefs_set))
+                    print('internal_hrefs_set', internal_hrefs_set)
+                    logging.info(str(external_hrefs_set))
+                    print('external_hrefs_set', external_hrefs_set)
+                    raise
+                
+                if category_list.index('') == 0:    # assume relative url
+                    pass
+                elif category_list.index('') == 1:  # assume absolute url
+                    category_list = category_list[1:]
+                else:
+                    category_list = []
+                
+                while '' in category_list:
+                    category_list.remove('')
+                
+                if category_list:
+                    category_list = category_list[1:]
+                    if len(category_list) >= 2:
+                        article_report['CATEGORY'] = category_list[0]
+                        article_report['SUBCATEGORY'] = category_list[1] if len(category_list) >= 3 else None
+                    else:
+                        article_report['CATEGORY'] = None
+                        article_report['SUBCATEGORY'] = None
+            else:
+                article_report['SLUG'] = None
+                article_report['SLUG_INTERNAL'] = None
+                article_report['CATEGORY'] = None
+                article_report['SUBCATEGORY'] = None
+
+            article_report['Origen'] = self.url
+            article_report['FechaFiltro'] = self.capture_datetime
+            article_report['FechaCreacion'] = self.capture_datetime
+            article_report['FechaModificacion'] = self.capture_datetime
+
+            article_reports[i] = article_report
+        
+        # Stash it away
+        for article in article_reports:
+            UKEY = str(datetime.now()) + '-' + str(article_reports[article]['ARTICLE'])
+            row = Row(UKEY,    # UKEY
+                      article_reports[article]['JOB'],
+                      article_reports[article]['TITLE'],
+                      article_reports[article]['TITLE_WORD_COUNT'],
+                      article_reports[article]['ARTICLE'],
+                      article_reports[article]['CLUSTER'],
+                      article_reports[article]['CLUSTER_INDEX'],
+                      article_reports[article]['CLUSTER_SIZE'],
+                      article_reports[article]['CLUSTER_UNIQUE'],
+                      article_reports[article]['AUTHOR'],
+                      article_reports[article]['SUMMARY'],
+                      article_reports[article]['VOLANTA'],
+                      article_reports[article]['CATEGORY'],
+                      article_reports[article]['SUBCATEGORY'],
+                      article_reports[article]['SLUG'],
+                      article_reports[article]['SLUG_INTERNAL'],
+                      article_reports[article]['Origen'],
+                      article_reports[article]['FechaFiltro'],
+                      article_reports[article]['FechaCreacion'],
+                      article_reports[article]['FechaModificacion'],
+                     )
+
+            if self.scraps.SQL_stash_row_given_schema(row, SQL_schema, Row):
+                pass
+            else:
+                logging.error(f"Error while stashing row:")
+                logging.error(f"Row: {row}")
