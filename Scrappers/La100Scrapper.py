@@ -140,7 +140,7 @@ class La100Scrapper(Scrapper):
             article_report['CLUSTER_SIZE'] = None
             article_report['CLUSTER_UNIQUE'] = None # Irrelevant
 
-            article_report['AUTHOR'] = 'LA_100 ARTICLES ARE NOT AUTHORED!'
+            article_report['AUTHOR'] = None
             article_report['SUMMARY'] = summary[0].get_text() if (summary := list(article.find_all('p', class_ = 'subtitle'))) else None
             article_report['VOLANTA'] = 'LA_100 ARTICLES HAS NO VOLANTAS!'
 

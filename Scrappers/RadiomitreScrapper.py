@@ -140,7 +140,7 @@ class RadiomitreScrapper(Scrapper):
             article_report['CLUSTER_SIZE'] = None
             article_report['CLUSTER_UNIQUE'] = None # Irrelevant
 
-            article_report['AUTHOR'] = 'RADIO_MITRE ARTICLES ARE NOT AUTHORED!'
+            article_report['AUTHOR'] = None
             article_report['SUMMARY'] = summary[0].get_text() if (summary := list(article.find_all('p', class_ = 'subtitle'))) else None
             article_report['VOLANTA'] = 'RADIO_MITRE ARTICLES HAS NO VOLANTAS!'
 
