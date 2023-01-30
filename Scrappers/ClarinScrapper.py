@@ -214,20 +214,24 @@ class ClarinScrapper(Scrapper):
                 FechaCreacion = self.capture_datetime
                 FechaModificacion = self.capture_datetime
 
-                # Build row corresponding to <h2>'s <article>
-                row = Row(str(datetime.now()) + '-' + str(i) + '-' + str(j), 
-                          self.job_name, 
-                          TITLE, 
-                          TITLE_WORD_COUNT, 
-                          AUTHOR, SUMMARY, 
-                          VOLANTA, 
-                          CATEGORY, 
-                          SLUG, 
-                          Origen, 
-                          FechaFiltro, 
-                          FechaCreacion, 
-                          FechaModificacion)
-                article_descriptors.append(row)
+                if SLUG in [row.SLUG for row in article_descriptors]:
+                    continue
+                else:
+                # Build row corresponding to <h2>'s <article> -- 2023-01-30 : Only if SLUG doesn't already exists in article_descriptors
+                    row = Row(str(datetime.now()) + '-' + str(i) + '-' + str(j), 
+                              self.job_name, 
+                              TITLE, 
+                              TITLE_WORD_COUNT, 
+                              AUTHOR, 
+                              SUMMARY, 
+                              VOLANTA, 
+                              CATEGORY, 
+                              SLUG, 
+                              Origen, 
+                              FechaFiltro, 
+                              FechaCreacion, 
+                              FechaModificacion)                
+                    article_descriptors.append(row)
 
         # At this point, article_descriptors should have all the scrapped data
         # No UKEY, FechaFiltro, FechaCreacion, FechaModificacion are defined

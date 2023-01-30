@@ -193,6 +193,11 @@ class RadiomitreScrapper(Scrapper):
                 article_report['CATEGORY'] = None
                 article_report['SUBCATEGORY'] = None
 
+            # 2022-01-30: Force those with slug https://mitreyelcampo.cienradios.com into categoria mitreyelcampo
+            if (article_report['SLUG'].find('https://mitreyelcampo.cienradios.com/') == 0 or
+                article_report['SLUG'].find('http://mitreyelcampo.cienradios.com/') == 0):
+                article_report['CATEGORY'] = 'mitreyelcampo'
+
             article_report['Origen'] = self.url
             article_report['FechaFiltro'] = self.capture_datetime
             article_report['FechaCreacion'] = self.capture_datetime

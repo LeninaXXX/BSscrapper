@@ -230,7 +230,11 @@ class InfobaeScrapper(Scrapper):
             # print("DBG::", anchored_articles[h2]['FechaCreacion'])
             # print("DBG::", anchored_articles[h2]['FechaModificacion'])
 
-            row = Row(UKEY,    # UKEY
+            # 30-12-2022 : this fixes the inclusion of category links as titles, which is incorrect AND undesirable
+            if anchored_articles[h2]['SLUG'].find('https://www.infobae.com/') == 0:
+                continue
+            else:
+                row = Row(UKEY,    # UKEY
                       anchored_articles[h2]['JOB'],
                       anchored_articles[h2]['TITLE'],
                       anchored_articles[h2]['TITLE_WORD_COUNT'],
