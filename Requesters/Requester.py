@@ -29,7 +29,7 @@ class Requester():
     
     def go_fetch(self):
         try:
-            self.ret = requests.get(self.url, headers = self.headers, params = self.params)
+            self.ret = requests.get(self.url, headers = self.headers, params = self.params, timeout=60.000)
         except Exception as e:
             logging.exception("Something went wrong when trying to fetch: " + self.job_name)
             logging.exception("Something went wrong when trying to fetch: " + self.url)
