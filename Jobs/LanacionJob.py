@@ -16,7 +16,7 @@ class LanacionJob(Job):
         self.dbg = dbg                  # Debugging mode -- False by default. Tags database commmits as "dbg_flag = True"
         
         # SQL Parameters -- NOTE: 2022-11-10 -- No new fields to be added in this iteration, but try to fill article/cluster
-        self.job_sql_table = 'articles_scrap_v2_la_nacion' if not dbg else 'articles_scrap_v2_dbg'
+        self.job_sql_table = 'articles_scrap_v2_la_nacion' if not self.dbg else 'articles_scrap_v2_dbg'
 
         self.primary_key = None			                # This signals not ready to commit to database
         self.capture_datetime = datetime.datetime.now() # This signals not ready to commit to database

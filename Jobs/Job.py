@@ -62,7 +62,7 @@ class Job():
             # CONNECT TO SQL DATABASE
             # #######################
             try:    # guard for connection exceptions
-                self.sql_connection = SQLServer()
+                self.sql_connection = SQLServer(db='ANALITICA') if not self.dbg else SQLServer(db='ANALITICA_DEV')
             except Exception as e:    
                 print("Failed to connect to SQL\n", e)
                 logging.error("Failed to connect to SQL DataBase", exc_info = e)

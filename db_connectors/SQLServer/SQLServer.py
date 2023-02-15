@@ -13,11 +13,11 @@ import logging
 import traceback
 
 class SQLServer(Database):
-    def __init__(self):
+    def __init__(self, db="ANALITICA_DEV"):
         try:
             self.conn = pyodbc.connect('Driver={SQL Server};'
                                         'Server=192.168.100.18;'
-                                        'Database=ANALITICA_DEV;'
+                                        'Database=' + db + ';'
                                         'UID=python_externo;'
                                         'PWD=MazzPythonNew'
                                         # 'Trusted_Connection=yes;'
