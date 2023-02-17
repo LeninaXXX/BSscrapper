@@ -207,7 +207,7 @@ class InfobaeScrapper(Scrapper):
             anchored_articles[h2]['TITLE_WORD_COUNT'] = len(h2.get_text().strip().split(' '))
 
         # Stash it away
-        for h2 in anchored_articles:
+        for i, h2 in enumerate(anchored_articles):
             UKEY = str(datetime.now()) + '-' + str(anchored_articles[h2]['ARTICLE'])
             # print("DBG::", UKEY)
             # print("DBG::", anchored_articles[h2]['JOB'])
@@ -231,32 +231,36 @@ class InfobaeScrapper(Scrapper):
             # print("DBG::", anchored_articles[h2]['FechaModificacion'])
 
             # 30-12-2022 : this fixes the inclusion of category links as titles, which is incorrect AND undesirable
-            if anchored_articles[h2]['SLUG'].find('https://www.infobae.com/') == 0:
-                continue
-            else:
-                row = Row(UKEY,    # UKEY
-                      anchored_articles[h2]['JOB'],
-                      anchored_articles[h2]['TITLE'],
-                      anchored_articles[h2]['TITLE_WORD_COUNT'],
-                      anchored_articles[h2]['ARTICLE'],
-                      anchored_articles[h2]['CLUSTER'],
-                      anchored_articles[h2]['CLUSTER_INDEX'],
-                      anchored_articles[h2]['CLUSTER_SIZE'],
-                      anchored_articles[h2]['CLUSTER_UNIQUE'],
-                      anchored_articles[h2]['AUTHOR'],
-                      anchored_articles[h2]['SUMMARY'],
-                      anchored_articles[h2]['VOLANTA'],
-                      anchored_articles[h2]['CATEGORY'],
-                      anchored_articles[h2]['SUBCATEGORY'],
-                      anchored_articles[h2]['SLUG'],
-                      anchored_articles[h2]['SLUG_INTERNAL'],
-                      anchored_articles[h2]['Origen'],
-                      anchored_articles[h2]['FechaFiltro'],
-                      anchored_articles[h2]['FechaCreacion'],
-                      anchored_articles[h2]['FechaModificacion']
-                     )
+            try:
+                if anchored_articles[h2]['SLUG'].find('https://www.infobae.com/') == 0:
+                    continue
+                else:
+                    row = Row(UKEY,    # UKEY
+                        anchored_articles[h2]['JOB'],
+                        anchored_articles[h2]['TITLE'],
+                        anchored_articles[h2]['TITLE_WORD_COUNT'],
+                        anchored_articles[h2]['ARTICLE'],
+                        anchored_articles[h2]['CLUSTER'],
+                        anchored_articles[h2]['CLUSTER_INDEX'],
+                        anchored_articles[h2]['CLUSTER_SIZE'],
+                        anchored_articles[h2]['CLUSTER_UNIQUE'],
+                        anchored_articles[h2]['AUTHOR'],
+                        anchored_articles[h2]['SUMMARY'],
+                        anchored_articles[h2]['VOLANTA'],
+                        anchored_articles[h2]['CATEGORY'],
+                        anchored_articles[h2]['SUBCATEGORY'],
+                        anchored_articles[h2]['SLUG'],
+                        anchored_articles[h2]['SLUG_INTERNAL'],
+                        anchored_articles[h2]['Origen'],
+                        anchored_articles[h2]['FechaFiltro'],
+                        anchored_articles[h2]['FechaCreacion'],
+                        anchored_articles[h2]['FechaModificacion']
+                        )
+            except AttributeError as e:
+                logging.error(f'AttributeError: N_h2 : {i} // {h2}')
 
             if self.scraps.SQL_stash_row_given_schema(row, SQL_schema, Row):
+                print(f"{i} AAAAAAAAAAAAAAAAAAAA!")
                 pass
             else:
                 logging.error(f"Error while stashing row:")
