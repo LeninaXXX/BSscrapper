@@ -152,8 +152,11 @@ class LanacionScrapper(Scrapper):
             article_report['JOB'] = self.job_name
 
             article_report['ARTICLE'] = i
-            article_report['TITLE'] = article.find(class_ = 'com-title').get_text()
-            article_report['TITLE_WORD_COUNT'] = len(tuple(article_report['TITLE'].split(' ')))
+
+            # TODO: com-title returns None value -- shouldn't
+            article_report['TITLE'] = a.get_text() if (a := article.find(class_ = ('title'))) != None else None
+           
+            article_report['TITLE_WORD_COUNT'] = len(a.split(' ')) if (a := article_report['TITLE']) != None else None
 
             article_report['LANACION_data_pos'] = article.attrs.get('data-pos')
             article_report['LANACION_data_pos_cluster'] = data_pos_by_article.get(article)[0]

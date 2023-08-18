@@ -32,7 +32,7 @@ valid_jobs = { 'ambitofinanciero'  : AmbitofinancieroJob,
                'pagina12'          : Pagina12Job,
                'radiomitre'        : RadiomitreJob, # me habia comido este job. Costo poco agregarlo (45"). Buen approach...
                'tn'                : TNJob,
-               
+
                'databasetest'      : DatabaseTestJob, 
                'clarinreprocess'   : ClarinReprocessJob,
                }
